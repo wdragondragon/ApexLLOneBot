@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jdragon.apex.mapper.AgMachineNewMapper">
+    <select id="getAuthList" resultType="com.jdragon.apex.entity.AgMachinesKeys">
+        select ag_machines_new.id,
+               ag_machines_new.val_key,
+               ag_machines_new.machine_code,
+               ag_keys.qq,
+               ag_keys.expiration_time,
+               ag_keys.validate_type,
+               ag_keys.used,
+               ag_keys.key_type,
+               ag_keys.last_val_time,
+               ag_keys.external_card
+        from ag_keys
+                 join ag_machines_new
+                      on ag_keys.val_key = ag_machines_new.val_key
+        where (key_type = 5
+           or ag_keys.expiration_time is null
+           or ag_keys.expiration_time > now())
+           and
+            <if test="type == 'qq'">
+              ag_keys.qq = #{condition}
+            </if>
+            <if test="type != 'qq'">
+                ag_machines_new.machine_code = #{condition}
+            </if>
+    </select>
+</mapper>
