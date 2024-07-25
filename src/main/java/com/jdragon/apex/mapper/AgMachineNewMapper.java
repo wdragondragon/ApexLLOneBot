@@ -12,6 +12,7 @@ import java.util.List;
 @Mapper
 public interface AgMachineNewMapper extends BaseMapper<AgMachineNew> {
     List<AgMachinesKeys> getAuthList(@Param("type") String type,
-                                     @Param("condition") String condition);
+                                     @Param("condition") String condition,
+                                     @Param("validateType") String validateType);
 
 }

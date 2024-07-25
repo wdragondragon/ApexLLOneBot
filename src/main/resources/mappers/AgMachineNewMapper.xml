@@ -18,6 +18,7 @@
         where (key_type = 5
            or ag_keys.expiration_time is null
            or ag_keys.expiration_time > now())
+           and ag_keys.validate_type = #{validateType}
            and
             <if test="type == 'qq'">
               ag_keys.qq = #{condition}

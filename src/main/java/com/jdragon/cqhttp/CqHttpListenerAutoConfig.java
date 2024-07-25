@@ -1,5 +1,7 @@
 package com.jdragon.cqhttp;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jdragon.cqhttp.config.ObjectMapperHolder;
 import com.jdragon.cqhttp.handler.MessageHandler;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;

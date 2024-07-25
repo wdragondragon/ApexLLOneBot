@@ -3,9 +3,11 @@ package com.jdragon.apex.controller;
 
 import com.jdragon.apex.entity.AgMachinesKeys;
 import com.jdragon.apex.service.AgKeysService;
+import com.jdragon.apex.service.AgMachineKeysService;
 import com.jdragon.apex.service.AgMachineNewService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,17 +24,17 @@ public class AgController {
 
     private final AgKeysService agKeysService;
 
-    private final AgMachineNewService agMachineNewService;
+    private final AgMachineKeysService agMachineKeysService;
 
-    public AgController(AgKeysService agKeysService, AgMachineNewService agMachineNewService) {
+    public AgController(AgKeysService agKeysService, AgMachineKeysService agMachineKeysService) {
         this.agKeysService = agKeysService;
-        this.agMachineNewService = agMachineNewService;
+        this.agMachineKeysService = agMachineKeysService;
     }
 
     @Operation(summary = "申请体验keys并绑定qq，同一类型不会重新生成")
     @GetMapping("/createExperienceCardByQQ")
     public String createExperienceCardByQQ(@RequestParam String qq, @RequestParam String validateType) {
-        return agKeysService.createExperienceCardByQQ(qq, validateType);
+        return agMachineKeysService.createExperienceCardByQQ(qq, validateType);
     }
 
     @Operation(summary = "创建域外卡")
@@ -56,14 +58,14 @@ public class AgController {
     @GetMapping("/machineBindKeys")
     public String createKeyExt(@RequestParam String key,
                                @RequestParam String machineCode) {
-        return agKeysService.bind(machineCode, key);
+        return agMachineKeysService.bind(machineCode, key);
     }
 
     @Operation(summary = "校验机器码类型key是否过期")
     @GetMapping("/validate")
     public Map<String, Object> validate(@RequestParam String machineCode,
                                         @RequestParam String validateType) {
-        AgMachinesKeys agMachinesKeys = agMachineNewService.validate(machineCode, validateType);
+        AgMachinesKeys agMachinesKeys = agMachineKeysService.validate(machineCode, validateType);
         Map<String, Object> map = new HashMap<>();
         map.put("machine_code", machineCode);
         map.put("validate_type", validateType);

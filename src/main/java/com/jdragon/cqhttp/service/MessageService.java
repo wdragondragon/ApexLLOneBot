@@ -3,6 +3,8 @@ package com.jdragon.cqhttp.service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.jdragon.cqhttp.client.CqHttpClient;
 import com.jdragon.cqhttp.config.ObjectMapperHolder;
+import com.jdragon.cqhttp.entity.CqResult;
+import com.jdragon.cqhttp.entity.GroupMember;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -58,5 +60,18 @@ public class MessageService {
         Map<String, Object> request = ObjectMapperHolder.MAPPER.readValue(json, new TypeReference<>() {
         });
         messageClient.sendPrivateMsg(request);
+    }
+
+    @SneakyThrows
+    public CqResult<List<GroupMember>> getGroupMemberList(Long groupId) {
+        String jsonTemplate = """
+                {
+                    "group_id": %d
+                }
+                """;
+        String json = String.format(jsonTemplate, groupId);
+        Map<String, Object> request = ObjectMapperHolder.MAPPER.readValue(json, new TypeReference<>() {
+        });
+        return messageClient.getGroupMemberList(request);
     }
 }
