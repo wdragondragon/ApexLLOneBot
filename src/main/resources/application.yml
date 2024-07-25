@@ -13,7 +13,7 @@ spring:
 
 mybatis-plus:
   mapper-locations: classpath:/mappers/*Mapper.xml
-  type-aliases-package: org.example.springboot3.entity.*
+  type-aliases-package: com.jdragon.apex.entity.*
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: true
