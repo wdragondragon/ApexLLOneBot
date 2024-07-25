@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: springboot3
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://rmhost:3305/ag
+    username: root
+    password: 951753
+
+mybatis-plus:
+  mapper-locations: classpath:/mappers/*Mapper.xml
+  type-aliases-package: org.example.springboot3.entity.*
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+    jdbc-type-for-null: 'null'
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+knife4j:
+  enable: true
+springdoc:
+  api-docs:
+    enabled: true
