@@ -55,7 +55,7 @@ public class CMessageListener {
         long userId = message.getUserId();
         long groupId = message.getGroupId();
         long selfId = message.getSelfId();
-        Matcher matcher = RegExUtils.dotAllMatcher("获取(.*)体验卡", message.getRawMessage());
+        Matcher matcher = RegExUtils.dotAllMatcher("获取(.*)体验卡", message.getRawMessage().trim());
         if (matcher.find()) {
             String validateType = matcher.group(1);
             String key = agMachineKeysService.createExperienceCardByQQ(String.valueOf(userId), String.valueOf(groupId), validateType);
@@ -63,6 +63,7 @@ public class CMessageListener {
             messageService.sendPrivateMsg(userId, retMsg);
             String selfMsg = String.format("群号[%s]，用户qq[%s]申请了一张%s体验卡，卡密为：%s", groupId, userId, validateType, key);
             messageService.sendPrivateMsg(selfId, selfMsg);
+            messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), "卡密已私聊，请查收后妥善保管。");
         }
     }
 
@@ -74,7 +75,7 @@ public class CMessageListener {
         long userId = message.getUserId();
         Message[] messageArray = message.getMessage();
         if (messageArray[0].getType().equals("at") && messageArray.length == 2) {
-            Matcher matcher = RegExUtils.dotAllMatcher("授权(天|月|周|年|永久)卡(.*)", (String) messageArray[1].getData().get("text"));
+            Matcher matcher = RegExUtils.dotAllMatcher("授权(天|月|周|年|永久)卡(.*)", messageArray[1].getData().get("text").toString().trim());
             if (matcher.find()) {
                 String qq = String.valueOf(messageArray[0].getData().get("qq"));
                 String keyType = matcher.group(1);
@@ -90,12 +91,27 @@ public class CMessageListener {
     }
 
     @CqListener(type = MessageType.CHAT_MESSAGE, subType = "group")
+    public void help(final ChatMessage message) {
+        String msg = message.getRawMessage().trim();
+        if (msg.equals("/帮助") || msg.equals("/help") || msg.equals("/h")) {
+            String result = """
+                    可用命令：
+                    1、@某人 查询ag授权
+                    2、获取[ai/apex_recoils/apex_recoils_server/auto_upgrade_script]体验卡
+                    3、@某人 授权[天|月|周|年|永久]卡[ai/apex_recoils/apex_recoils_server/auto_upgrade_script]
+                    4、生成[数字]张[天|月|周|年|永久]卡[ai/apex_recoils/apex_recoils_server/auto_upgrade_script]
+                    """;
+            messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), result);
+        }
+    }
+
+    @CqListener(type = MessageType.CHAT_MESSAGE, subType = "group")
     public void createKeysExt(final ChatMessage message) {
         if (!message.getSender().isAdmin()) {
             return;
         }
 
-        Matcher matcher = RegExUtils.dotAllMatcher("生成(\\d+)张(天|月|周|年|永久)卡(.*)", message.getRawMessage());
+        Matcher matcher = RegExUtils.dotAllMatcher("生成(\\d+)张(天|月|周|年|永久)卡(.*)", message.getRawMessage().trim());
         if (matcher.find()) {
             Integer createNumber = Integer.valueOf(matcher.group(1));
             String keyType = matcher.group(2);
