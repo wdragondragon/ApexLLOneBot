@@ -63,7 +63,7 @@ public class CMessageListener {
             messageService.sendPrivateMsg(userId, retMsg);
             String selfMsg = String.format("群号[%s]，用户qq[%s]申请了一张%s体验卡，卡密为：%s", groupId, userId, validateType, key);
             messageService.sendPrivateMsg(selfId, selfMsg);
-            messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), "卡密已私聊，请查收后妥善保管。");
+            messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), retMsg);
         }
     }
 
