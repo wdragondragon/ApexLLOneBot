@@ -2,6 +2,7 @@ package com.jdragon.apex.listener;
 
 import com.jdragon.apex.entity.AgMachinesKeys;
 import com.jdragon.apex.mapper.AgMachineNewMapper;
+import com.jdragon.apex.service.AgKeysService;
 import com.jdragon.apex.service.AgMachineKeysService;
 import com.jdragon.apex.utils.ExpirationTimeCalculator;
 import com.jdragon.cqhttp.CqListener;
@@ -11,6 +12,7 @@ import com.jdragon.cqhttp.message.ChatMessage;
 import com.jdragon.cqhttp.service.MessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RegExUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,22 +27,25 @@ public class CMessageListener {
     private final AgMachineKeysService agMachineKeysService;
 
     private final AgMachineNewMapper agMachineNewMapper;
+    private final AgKeysService agKeysService;
 
-    public CMessageListener(MessageService messageService, AgMachineKeysService agMachineKeysService, AgMachineNewMapper agMachineNewMapper) {
+    public CMessageListener(MessageService messageService, AgMachineKeysService agMachineKeysService, AgMachineNewMapper agMachineNewMapper, AgKeysService agKeysService) {
         this.messageService = messageService;
         this.agMachineKeysService = agMachineKeysService;
         this.agMachineNewMapper = agMachineNewMapper;
+        this.agKeysService = agKeysService;
     }
 
     @CqListener(type = MessageType.CHAT_MESSAGE, subType = "group")
     public void checkAgAuth(final ChatMessage message) {
         long groupId = message.getGroupId();
+        long msgId = message.getMessageId();
         Message[] messageArray = message.getMessage();
         if (messageArray[0].getType().equals("at") && messageArray.length == 2) {
             String qq = String.valueOf(messageArray[0].getData().get("qq"));
             String text = String.valueOf(messageArray[1].getData().get("text"));
             if ("查询ag授权".equals(text)) {
-                messageService.sendGroupMsg(groupId, getAuthStr("qq", qq));
+                messageService.sendGroupMsg(msgId, groupId, getAuthStr("qq", qq));
             }
         }
     }
@@ -58,6 +63,49 @@ public class CMessageListener {
             messageService.sendPrivateMsg(userId, retMsg);
             String selfMsg = String.format("群号[%s]，用户qq[%s]申请了一张%s体验卡，卡密为：%s", groupId, userId, validateType, key);
             messageService.sendPrivateMsg(selfId, selfMsg);
+        }
+    }
+
+    @CqListener(type = MessageType.CHAT_MESSAGE, subType = "group")
+    public void createKey(final ChatMessage message) {
+        if (!message.getSender().isAdmin()) {
+            return;
+        }
+        long userId = message.getUserId();
+        Message[] messageArray = message.getMessage();
+        if (messageArray[0].getType().equals("at") && messageArray.length == 2) {
+            Matcher matcher = RegExUtils.dotAllMatcher("授权(天|月|周|年|永久)卡(.*)", (String) messageArray[1].getData().get("text"));
+            if (matcher.find()) {
+                String qq = String.valueOf(messageArray[0].getData().get("qq"));
+                String keyType = matcher.group(1);
+                String validateType = matcher.group(2);
+                String key = agKeysService.createKey(qq, keyType, validateType);
+                messageService.sendPrivateMsg(userId, String.format("授权给[%s]的[%s%s卡]，卡密为:[%s]",
+                        qq, validateType, keyType, key));
+                messageService.sendPrivateMsg(Long.parseLong(qq), String.format("[%s]授权给你的[%s%s卡]，卡密为:[%s]",
+                        userId, validateType, keyType, key));
+                messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), "卡密已私聊，请查收后妥善保管。");
+            }
+        }
+    }
+
+    @CqListener(type = MessageType.CHAT_MESSAGE, subType = "group")
+    public void createKeysExt(final ChatMessage message) {
+        if (!message.getSender().isAdmin()) {
+            return;
+        }
+
+        Matcher matcher = RegExUtils.dotAllMatcher("生成(\\d+)张(天|月|周|年|永久)卡(.*)", message.getRawMessage());
+        if (matcher.find()) {
+            Integer createNumber = Integer.valueOf(matcher.group(1));
+            String keyType = matcher.group(2);
+            String validateType = matcher.group(3);
+            List<String> keyList = agKeysService.createKeysExt(createNumber, validateType, keyType);
+            String keyStr = Strings.join(keyList, '\n');
+            messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(),
+                    String.format("生成%d张%s%s卡成功，已私聊，请查收后妥善保管。", createNumber, validateType, keyType));
+            messageService.sendPrivateMsg(message.getUserId(),
+                    String.format("生成%d张%s%s卡成功，卡密：\n%s", createNumber, validateType, keyType, keyStr));
         }
     }
 

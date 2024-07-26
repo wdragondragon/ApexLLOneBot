@@ -8,4 +8,8 @@ public class Sender {
     private String nickname;
     private String card;
     private String role;
+
+    public boolean isAdmin() {
+        return role.equals("admin") || role.equals("owner");
+    }
 }

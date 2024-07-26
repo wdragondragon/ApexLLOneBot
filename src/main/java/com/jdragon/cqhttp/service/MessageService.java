@@ -6,10 +6,9 @@ import com.jdragon.cqhttp.config.ObjectMapperHolder;
 import com.jdragon.cqhttp.entity.*;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +47,7 @@ public class MessageService {
     }
 
     @SneakyThrows
-    public void sendGroupMsg(long groupId, String text) {
+    public void sendGroupMsg(Long msgId, Long groupId, String text) {
         String jsonTemplate = """
                 {
                     "group_id": %d,
@@ -64,10 +63,18 @@ public class MessageService {
                 """;
         SendGroupMsg sendGroupMsg = new SendGroupMsg();
         sendGroupMsg.setGroup_id(groupId);
+        List<Message> messages = new ArrayList<>();
+        if (msgId != null) {
+            Message replyMsg = new Message();
+            replyMsg.setData(Map.of("id", msgId));
+            replyMsg.setType("reply");
+            messages.add(replyMsg);
+        }
         Message message = new Message();
         message.setData(Map.of("text", text));
         message.setType("text");
-        sendGroupMsg.setMessage(List.of(message).toArray(new Message[0]));
+        messages.add(message);
+        sendGroupMsg.setMessage(messages.toArray(new Message[0]));
         String result = messageClient.sendGroupMsg(sendGroupMsg);
         log.info("发送群聊信息结果：{}", result);
     }

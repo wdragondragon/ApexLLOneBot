@@ -40,6 +40,7 @@ public class AgKeysService extends ServiceImpl<AgKeysMapper, AgKeys> {
                     .validateType(validateTypeStr)
                     .used(0)
                     .keyType(KEY_TYPE_MAP.getOrDefault(keyTypeStr, 1))
+                    .externalCard(1)
                     .build();
             agKeys.insert();
             keyList.add(uuid);

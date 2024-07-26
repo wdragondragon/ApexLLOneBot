@@ -49,3 +49,12 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+bootJar {
+    manifestContentCharset 'utf-8'
+    metadataCharset 'utf-8'
+    archivesBaseName = 'ApexLLOneBot' // jar包名
+}
+
+jar.enabled = true
+bootJar.enabled = true

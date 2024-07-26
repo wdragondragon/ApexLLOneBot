@@ -35,7 +35,7 @@ public class TestController {
     @Operation(summary = "测试发送信息")
     @GetMapping("/sendGroupMsg")
     public String sendGroupMsg(@RequestParam Long groupId, @RequestParam String msg) {
-        messageService.sendGroupMsg(groupId, msg);
+        messageService.sendGroupMsg(null, groupId, msg);
         return "成功";
     }
 
