@@ -48,13 +48,14 @@ public class AgKeysService extends ServiceImpl<AgKeysMapper, AgKeys> {
         return keyList;
     }
 
-    public String createKey(String qq, String keyType, String validateType) {
+    public String createKey(String qq, String keyType, String validateType, String createGroup) {
         String uuid = UUID.randomUUID().toString();
         AgKeys agKeys = AgKeys.builder()
                 .valKey(uuid)
                 .qq(qq)
                 .validateType(validateType)
                 .used(0)
+                .createGroup(createGroup)
                 .keyType(KEY_TYPE_MAP.getOrDefault(keyType, 1))
                 .build();
         agKeys.insert();
