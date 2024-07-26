@@ -26,4 +26,9 @@ public class MetaEvent extends BaseMessage {
         }));
         return metaEvent;
     }
+
+    @Override
+    public String getType() {
+        return metaEventType;
+    }
 }

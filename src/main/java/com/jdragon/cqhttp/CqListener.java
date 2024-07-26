@@ -14,4 +14,6 @@ public @interface CqListener {
 
     @AliasFor("value")
     MessageType type() default MessageType.CHAT_MESSAGE;
+
+    String subType() default "";
 }

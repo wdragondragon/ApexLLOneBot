@@ -36,7 +36,7 @@ public class AgMachineKeysService {
         this.messageService = messageService;
     }
 
-    public String createExperienceCardByQQ(String qq, String validateType) {
+    public String createExperienceCardByQQ(String qq, String createGroup, String validateType) {
         LambdaQueryWrapper<AgKeys> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(AgKeys::getQq, qq);
         lambdaQueryWrapper.eq(AgKeys::getValidateType, validateType);
@@ -47,6 +47,7 @@ public class AgMachineKeysService {
         if (experienceKey != null) {
             if (experienceKey.getUsed() == 1) {
                 experienceKey.setUsed(0);
+                experienceKey.setCreateGroup(createGroup);
                 AgMachineNew agMachineNew = agMachineNewService.getByValKey(experienceKey.getValKey());
                 if (agMachineNew != null) {
                     log.info("从{}中解绑{}", agMachineNew.getMachineCode(), experienceKey.getValKey());
@@ -60,6 +61,7 @@ public class AgMachineKeysService {
             AgKeys agKeys = AgKeys.builder()
                     .valKey(UUID.randomUUID().toString())
                     .qq(qq)
+                    .createGroup(createGroup)
                     .expirationTime(null)
                     .validateType(validateType)
                     .used(0)
@@ -110,7 +112,7 @@ public class AgMachineKeysService {
                 agMachineNewMapper.getAuthList("machine", machineCode, validateType);
         if (authList.size() == 1) {
             AgMachinesKeys agMachinesKeys = authList.getFirst();
-            CqResult<List<GroupMember>> groupMemberList = messageService.getGroupMemberList(206666041L);
+            CqResult<List<GroupMember>> groupMemberList = messageService.getGroupMemberList(Long.valueOf(agMachinesKeys.getCreateGroup()));
             List<String> userIdList = groupMemberList.getData().stream()
                     .map(GroupMember::getUser_id)
                     .map(String::valueOf).toList();

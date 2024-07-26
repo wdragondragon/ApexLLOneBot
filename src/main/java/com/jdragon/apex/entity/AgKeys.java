@@ -36,6 +36,8 @@ public class AgKeys extends Model<AgKeys> {
 
     private Integer externalCard;
 
+    private String createGroup;
+
     @Override
     public Serializable pkVal() {
         return id;

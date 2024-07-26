@@ -11,20 +11,22 @@
                ag_keys.used,
                ag_keys.key_type,
                ag_keys.last_val_time,
-               ag_keys.external_card
+               ag_keys.external_card,
+               ag_keys.create_group
         from ag_keys
                  join ag_machines_new
                       on ag_keys.val_key = ag_machines_new.val_key
         where (key_type = 5
            or ag_keys.expiration_time is null
            or ag_keys.expiration_time > now())
-           and ag_keys.validate_type = #{validateType}
-           and
+           <if test="validateType != null">
+               and ag_keys.validate_type = #{validateType}
+           </if>
             <if test="type == 'qq'">
-              ag_keys.qq = #{condition}
+                and ag_keys.qq = #{condition}
             </if>
             <if test="type != 'qq'">
-                ag_machines_new.machine_code = #{condition}
+                and ag_machines_new.machine_code = #{condition}
             </if>
     </select>
 </mapper>

@@ -33,8 +33,10 @@ public class AgController {
 
     @Operation(summary = "申请体验keys并绑定qq，同一类型不会重新生成")
     @GetMapping("/createExperienceCardByQQ")
-    public String createExperienceCardByQQ(@RequestParam String qq, @RequestParam String validateType) {
-        return agMachineKeysService.createExperienceCardByQQ(qq, validateType);
+    public String createExperienceCardByQQ(@RequestParam String qq,
+                                           @RequestParam String createGroup,
+                                           @RequestParam String validateType) {
+        return agMachineKeysService.createExperienceCardByQQ(qq, createGroup, validateType);
     }
 
     @Operation(summary = "创建域外卡")

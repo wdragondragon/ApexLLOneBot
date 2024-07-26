@@ -37,4 +37,9 @@ public class ChatMessage extends BaseMessage {
         }));
         return chatMessage;
     }
+
+    @Override
+    public String getType() {
+        return messageType;
+    }
 }

@@ -28,4 +28,9 @@ public class NoticeEvent extends BaseMessage {
         }));
         return noticeEvent;
     }
+
+    @Override
+    public String getType() {
+        return noticeType;
+    }
 }

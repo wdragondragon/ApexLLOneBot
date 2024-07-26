@@ -30,6 +30,7 @@ public class CqHttpMessageListenerScanPostProcesser implements BeanPostProcessor
                 Class<?>[] parameterTypes = method.getParameterTypes();
                 if (parameterTypes.length == 1) {
                     MessageType messageType = (MessageType) annotationAttributes.get("type");
+                    String subType = (String) annotationAttributes.get("subType");
                     Type[] genericParameterTypes = method.getGenericParameterTypes();
                     CqHttpListenerMethod rlm = new CqHttpListenerMethod();
                     rlm.setBeanName(beanName);
@@ -38,6 +39,7 @@ public class CqHttpMessageListenerScanPostProcesser implements BeanPostProcessor
                     rlm.setParameterClass(parameterTypes[0]);
                     rlm.setParameterType(genericParameterTypes[0]);
                     rlm.setMessageType(messageType);
+                    rlm.setSubType(subType);
                     listenerMethods.add(rlm);
                 }
             }

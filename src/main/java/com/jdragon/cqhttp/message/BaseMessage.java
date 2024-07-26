@@ -16,6 +16,8 @@ public class BaseMessage {
     @JsonIgnore
     private Map<String, Object> extraAttributes = new HashMap<>();
 
+    private String type;
+
     @JsonAnySetter
     public void setExtraAttributes(String key, Object value) {
         extraAttributes.put(key, value);

@@ -31,4 +31,6 @@ public class AgMachinesKeys {
     private LocalDateTime lastValTime;
 
     private Integer externalCard;
+
+    private String createGroup;
 }

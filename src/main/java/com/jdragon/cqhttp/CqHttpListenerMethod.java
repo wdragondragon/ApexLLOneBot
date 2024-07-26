@@ -27,6 +27,8 @@ public class CqHttpListenerMethod {
 
     private MessageType messageType;
 
+    private String subType;
+
     public Object getBean(ApplicationContext applicationContext) {
         if (bean == null) {
             synchronized (this) {

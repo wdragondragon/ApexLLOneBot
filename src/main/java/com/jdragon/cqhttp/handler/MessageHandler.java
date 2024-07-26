@@ -8,6 +8,7 @@ import com.jdragon.cqhttp.constants.MessageType;
 import com.jdragon.cqhttp.message.BaseMessage;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -60,7 +61,10 @@ public class MessageHandler implements ApplicationContextAware {
                     if (Objects.equals(messageType, handler.getType())) {
                         try {
                             BaseMessage msgObject = handler.createMsgObject(json);
-                            targetMethod.invoke(rlm.getBean(applicationContext), msgObject);
+                            if (StringUtils.isAnyBlank(msgObject.getType(), rlm.getSubType())
+                                    || Objects.equals(msgObject.getType(), rlm.getSubType())) {
+                                targetMethod.invoke(rlm.getBean(applicationContext), msgObject);
+                            }
                         } catch (IOException | IllegalAccessException | InvocationTargetException e) {
                             log.error("[{}][{}]处理器处理异常：{}", postType, handler.getClass().getName(), e.getMessage(), e);
                         }
