@@ -43,7 +43,8 @@ public class MessageHandler implements ApplicationContextAware {
 
         MessageType messageType = MessageType.getByCode(postType);
         if (messageType == null) {
-            throw new IllegalArgumentException("Unsupported post_type: " + postType);
+            log.warn("Unsupported post_type: {}", postType);
+            return;
         }
         handlers.stream().filter(handler -> Objects.equals(messageType, handler.getType())).forEach(handler -> {
             try {
