@@ -42,8 +42,8 @@ public class CMessageListener {
         long msgId = message.getMessageId();
         Message[] messageArray = message.getMessage();
         if (messageArray[0].getType().equals("at") && messageArray.length == 2) {
-            String qq = String.valueOf(messageArray[0].getData().get("qq"));
-            String text = String.valueOf(messageArray[1].getData().get("text"));
+            String qq = String.valueOf(messageArray[0].getData().get("qq")).trim();
+            String text = String.valueOf(messageArray[1].getData().get("text")).trim();
             if ("查询ag授权".equals(text)) {
                 messageService.sendGroupMsg(msgId, groupId, getAuthStr("qq", qq));
             }
