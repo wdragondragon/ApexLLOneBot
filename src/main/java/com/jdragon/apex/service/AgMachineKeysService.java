@@ -110,7 +110,7 @@ public class AgMachineKeysService {
     public AgMachinesKeys validate(String machineCode, String validateType) {
         List<AgMachinesKeys> authList =
                 agMachineNewMapper.getAuthList("machine", machineCode, validateType);
-        if (authList.size() == 1) {
+        if (!authList.isEmpty()) {
             AgMachinesKeys agMachinesKeys = authList.getFirst();
             CqResult<List<GroupMember>> groupMemberList = messageService.getGroupMemberList(Long.valueOf(agMachinesKeys.getCreateGroup()));
             List<String> userIdList = groupMemberList.getData().stream()
