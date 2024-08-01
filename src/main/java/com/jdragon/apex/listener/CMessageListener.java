@@ -4,6 +4,7 @@ import com.jdragon.apex.entity.AgMachinesKeys;
 import com.jdragon.apex.mapper.AgMachineNewMapper;
 import com.jdragon.apex.service.AgKeysService;
 import com.jdragon.apex.service.AgMachineKeysService;
+import com.jdragon.apex.service.OpenAiService;
 import com.jdragon.apex.utils.ExpirationTimeCalculator;
 import com.jdragon.cqhttp.CqListener;
 import com.jdragon.cqhttp.constants.MessageType;
@@ -27,13 +28,17 @@ public class CMessageListener {
     private final AgMachineKeysService agMachineKeysService;
 
     private final AgMachineNewMapper agMachineNewMapper;
+
     private final AgKeysService agKeysService;
 
-    public CMessageListener(MessageService messageService, AgMachineKeysService agMachineKeysService, AgMachineNewMapper agMachineNewMapper, AgKeysService agKeysService) {
+    private final OpenAiService openAiService;
+
+    public CMessageListener(MessageService messageService, AgMachineKeysService agMachineKeysService, AgMachineNewMapper agMachineNewMapper, AgKeysService agKeysService, OpenAiService openAiService) {
         this.messageService = messageService;
         this.agMachineKeysService = agMachineKeysService;
         this.agMachineNewMapper = agMachineNewMapper;
         this.agKeysService = agKeysService;
+        this.openAiService = openAiService;
     }
 
     @CqListener(type = MessageType.CHAT_MESSAGE, subType = "group")
@@ -124,6 +129,23 @@ public class CMessageListener {
                     String.format("生成%d张%s%s卡成功，卡密：\n%s", createNumber, validateType, keyType, keyStr));
         }
     }
+
+    @CqListener(type = MessageType.CHAT_MESSAGE)
+    public void aiMsg(final ChatMessage message) {
+        Message[] messageArray = message.getMessage();
+        if ("private".equals(message.getType())) {
+            String reply = openAiService.aiMsg(String.valueOf(message.getSender().getUserId()), message.getRawMessage());
+            messageService.sendPrivateMsg(message.getUserId(), reply);
+        } else if ("group".equals(message.getType())) {
+            if (messageArray[0].getType().equals("at") && messageArray.length == 2) {
+                String qq = String.valueOf(messageArray[0].getData().get("qq"));
+                String text = messageArray[1].getData().get("text").toString().trim();
+                String reply = openAiService.aiMsg(qq, text);
+                messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), reply);
+            }
+        }
+    }
+
 
     public String getAuthStr(String type, String condition) {
         List<AgMachinesKeys> authList = agMachineNewMapper.getAuthList(type, condition, null);

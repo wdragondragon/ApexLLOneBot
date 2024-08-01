@@ -10,6 +10,6 @@ public class Sender {
     private String role;
 
     public boolean isAdmin() {
-        return role.equals("admin") || role.equals("owner");
+        return role != null && (role.equals("admin") || role.equals("owner"));
     }
 }
