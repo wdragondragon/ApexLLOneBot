@@ -78,6 +78,7 @@ public class CMessageListener {
             return;
         }
         long userId = message.getUserId();
+        long groupId = message.getGroupId();
         Message[] messageArray = message.getMessage();
         if (messageArray[0].getType().equals("at") && messageArray.length == 2) {
             Matcher matcher = RegExUtils.dotAllMatcher("授权(天|月|周|年|永久)卡(.*)", messageArray[1].getData().get("text").toString().trim());
@@ -85,7 +86,7 @@ public class CMessageListener {
                 String qq = String.valueOf(messageArray[0].getData().get("qq"));
                 String keyType = matcher.group(1);
                 String validateType = matcher.group(2);
-                String key = agKeysService.createKey(qq, keyType, validateType);
+                String key = agKeysService.createKey(qq, keyType, validateType, String.valueOf(groupId));
                 messageService.sendPrivateMsg(userId, String.format("授权给[%s]的[%s%s卡]，卡密为:[%s]",
                         qq, validateType, keyType, key));
                 messageService.sendPrivateMsg(Long.parseLong(qq), String.format("[%s]授权给你的[%s%s卡]，卡密为:[%s]",

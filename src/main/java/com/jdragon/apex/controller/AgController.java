@@ -52,8 +52,9 @@ public class AgController {
     @GetMapping("/createKey")
     public String createKey(@RequestParam String qq,
                             @RequestParam String keyType,
+                            @RequestParam String createGroup,
                             @RequestParam String validateType) {
-        return agKeysService.createKey(qq, keyType, validateType);
+        return agKeysService.createKey(qq, keyType, validateType, createGroup);
     }
 
     @Operation(summary = "key绑定机器码，同一类型未过期时，不能重复绑定")
