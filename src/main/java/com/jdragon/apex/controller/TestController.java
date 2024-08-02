@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -75,5 +76,12 @@ public class TestController {
     @GetMapping("/discordMsg")
     public List<DiscordMessage> discordMsg(@RequestParam String channelId, @RequestParam Integer limit) {
         return discordService.getDiscordMessages(channelId, limit);
+    }
+
+    @Operation(summary = "testAt")
+    @GetMapping("/testAt")
+    public String testAt() {
+        messageService.sendGroupMsg(null, 206666041L, Arrays.asList(1061917196L, 1061917110L), "at测试");
+        return "发送成功";
     }
 }

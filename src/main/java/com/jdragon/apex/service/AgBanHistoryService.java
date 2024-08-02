@@ -19,9 +19,12 @@ public class AgBanHistoryService extends ServiceImpl<AgBanHistoryMapper, AgBanHi
 
     private final MessageService messageService;
 
-    public AgBanHistoryService(DiscordService discordService, MessageService messageService) {
+    private final AgCareBanService agCareBanService;
+
+    public AgBanHistoryService(DiscordService discordService, MessageService messageService, AgCareBanService agCareBanService) {
         this.discordService = discordService;
         this.messageService = messageService;
+        this.agCareBanService = agCareBanService;
     }
 
     public void refreshBanHistory() {
@@ -54,6 +57,7 @@ public class AgBanHistoryService extends ServiceImpl<AgBanHistoryMapper, AgBanHi
                 agBanHistory.setBanDate(discordMessage.getTimestamp());
                 this.saveOrUpdate(agBanHistory);
                 messageService.sendGroupMsg(null, 206666041L, agBanHistory.toString());
+                agCareBanService.sendCareMessage(agBanHistory);
             }
         }
     }

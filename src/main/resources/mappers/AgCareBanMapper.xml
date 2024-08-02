@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jdragon.apex.mapper.AgCareBanMapper">
+    <select id="queryCareBan" resultType="com.jdragon.apex.entity.AgCareBan">
+        select *
+        from ag_care_ban
+        where care_type = #{type}
+          and care_value = #{value}
+    </select>
+</mapper>

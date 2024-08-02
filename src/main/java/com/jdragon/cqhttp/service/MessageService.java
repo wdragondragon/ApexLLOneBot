@@ -47,7 +47,7 @@ public class MessageService {
     }
 
     @SneakyThrows
-    public void sendGroupMsg(Long msgId, Long groupId, String text) {
+    public void sendGroupMsg(Long msgId, Long groupId, List<Long> atList, String text) {
         String jsonTemplate = """
                 {
                     "group_id": %d,
@@ -70,6 +70,13 @@ public class MessageService {
             replyMsg.setType("reply");
             messages.add(replyMsg);
         }
+        for (Long at : atList) {
+            Message atMsg = new Message();
+            atMsg.setData(Map.of("qq", at));
+            atMsg.setType("at");
+            messages.add(atMsg);
+        }
+
         Message message = new Message();
         message.setData(Map.of("text", text));
         message.setType("text");
@@ -77,6 +84,11 @@ public class MessageService {
         sendGroupMsg.setMessage(messages.toArray(new Message[0]));
         String result = messageClient.sendGroupMsg(sendGroupMsg);
         log.info("发送群聊信息结果：{}", result);
+    }
+
+    @SneakyThrows
+    public void sendGroupMsg(Long msgId, Long groupId, String text) {
+        sendGroupMsg(msgId, groupId, new ArrayList<>(), text);
     }
 
     @SneakyThrows
