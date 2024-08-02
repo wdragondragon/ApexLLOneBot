@@ -33,11 +33,17 @@ public class AgBanHistory extends Model<AgBanHistory> {
 
     private String rankRange;
 
+    private String statusUid;
+
+    private String statusUrl;
+
+    private String platform;
+
     private LocalDateTime banDate;
 
     @Override
     public String toString() {
         String banDateStr = banDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        return "Ban in " + banDateStr + "\n" + uid + "\n" + descMsg + "\n\n" + msg;
+        return "Ban in " + banDateStr + "\n" + uid + "\n" + descMsg + "\n\n" + msg + "\n\n[" + platform + "]apex status link[" + statusUid + "]:" + statusUrl;
     }
 }

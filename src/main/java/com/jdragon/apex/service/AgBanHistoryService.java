@@ -65,6 +65,16 @@ public class AgBanHistoryService extends ServiceImpl<AgBanHistoryMapper, AgBanHi
                     agBanHistory.setRankRange(number);
                 }
                 agBanHistory.setUsername(msg.replaceAll(" has been banned", ""));
+
+                matcher = Pattern.compile("\\[(\\d+)]\\((https://apexlegendsstatus\\.com/profile/uid/([a-zA-Z0-9]+)/\\d+)\\)").matcher(link);
+                if (matcher.find()) {
+                    String statusUid = matcher.group(1);
+                    String statusUrl = matcher.group(2);
+                    String platform = matcher.group(3);
+                    agBanHistory.setStatusUid(statusUid);
+                    agBanHistory.setStatusUrl(statusUrl);
+                    agBanHistory.setPlatform(platform);
+                }
                 this.saveOrUpdate(agBanHistory);
                 messageService.sendGroupMsg(null, 206666041L, agBanHistory.toString());
                 agCareBanService.sendCareMessage(agBanHistory);
