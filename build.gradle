@@ -46,6 +46,11 @@ dependencies {
     implementation 'com.github.xiaoymin:knife4j-openapi3-jakarta-spring-boot-starter:4.3.0'
     implementation 'com.alibaba:druid-spring-boot-starter:1.2.8'
     implementation 'com.jayway.jsonpath:json-path'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 }
 
 tasks.named('test') {
