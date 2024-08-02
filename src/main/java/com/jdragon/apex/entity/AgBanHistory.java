@@ -21,11 +21,17 @@ public class AgBanHistory extends Model<AgBanHistory> {
 
     private String uid;
 
+    private String username;
+
     private String descMsg;
 
     private String msg;
 
     private String link;
+
+    private String rankRole;
+
+    private String rankRange;
 
     private LocalDateTime banDate;
 

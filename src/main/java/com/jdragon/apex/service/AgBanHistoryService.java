@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class AgBanHistoryService extends ServiceImpl<AgBanHistoryMapper, AgBanHistory> {
@@ -55,6 +57,14 @@ public class AgBanHistoryService extends ServiceImpl<AgBanHistoryMapper, AgBanHi
                 agBanHistory.setMsg(msg);
                 agBanHistory.setLink(link);
                 agBanHistory.setBanDate(discordMessage.getTimestamp());
+                Matcher matcher = Pattern.compile("(Master|Apex Predator) @\\d+ #(\\d+)").matcher(desc);
+                if (matcher.find()) {
+                    String rank = matcher.group(1);
+                    String number = matcher.group(2);
+                    agBanHistory.setRankRole(rank);
+                    agBanHistory.setRankRange(number);
+                }
+                agBanHistory.setUsername(msg.replaceAll(" has been banned", ""));
                 this.saveOrUpdate(agBanHistory);
                 messageService.sendGroupMsg(null, 206666041L, agBanHistory.toString());
                 agCareBanService.sendCareMessage(agBanHistory);
