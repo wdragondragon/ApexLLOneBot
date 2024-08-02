@@ -16,6 +16,7 @@ import org.apache.commons.lang3.RegExUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -31,6 +32,8 @@ public class CMessageListener {
     private final AgMachineNewMapper agMachineNewMapper;
 
     private final AgKeysService agKeysService;
+
+    private final List<String> VALIDATE_TYPE = Arrays.asList("ai", "apex_recoils", "apex_recoils_server", "auto_upgrade_script");
 
     private final OpenAiService openAiService;
 
@@ -64,6 +67,10 @@ public class CMessageListener {
         Matcher matcher = RegExUtils.dotAllMatcher("获取(.*)体验卡", message.getRawMessage().trim());
         if (matcher.find()) {
             String validateType = matcher.group(1);
+            if (!VALIDATE_TYPE.contains(validateType)) {
+                messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), "获取类型只能为:" + Strings.join(VALIDATE_TYPE, '/') + "，如果你想申请ai体验卡，请输入：获取ai体验卡");
+                return;
+            }
             String key = agMachineKeysService.createExperienceCardByQQ(String.valueOf(userId), String.valueOf(groupId), validateType);
             String retMsg = String.format("获取%s体验卡成功，卡密为：%s", validateType, key);
             messageService.sendPrivateMsg(userId, retMsg);
