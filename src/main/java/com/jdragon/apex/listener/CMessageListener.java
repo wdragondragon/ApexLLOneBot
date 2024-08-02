@@ -17,6 +17,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 
 @Slf4j
@@ -140,9 +141,11 @@ public class CMessageListener {
         } else if ("group".equals(message.getType())) {
             if (messageArray[0].getType().equals("at") && messageArray.length == 2) {
                 String qq = String.valueOf(messageArray[0].getData().get("qq"));
-                String text = messageArray[1].getData().get("text").toString().trim();
-                String reply = openAiService.aiMsg(qq, text);
-                messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), reply);
+                if (Objects.equals(qq, String.valueOf(message.getSelfId()))) {
+                    String text = messageArray[1].getData().get("text").toString().trim();
+                    String reply = openAiService.aiMsg(String.valueOf(message.getGroupId()), text);
+                    messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), reply);
+                }
             }
         }
     }
