@@ -61,6 +61,7 @@ public class SecurityConfig {
                 AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/**/*.css"),
                 AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/**/*.js"),
                 AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/profile/**"),
+                AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/cqhttp/**"),
 
                 AntPathRequestMatcher.antMatcher("/swagger-ui.html"),
                 AntPathRequestMatcher.antMatcher("/swagger-resources/**"),

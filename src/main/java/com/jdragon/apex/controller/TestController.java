@@ -1,13 +1,16 @@
 package com.jdragon.apex.controller;
 
 
+import com.jdragon.apex.client.DiscordClient;
+import com.jdragon.apex.entity.vo.DiscordMessage;
+import com.jdragon.apex.service.DiscordService;
 import com.jdragon.apex.service.OpenAiService;
 import com.jdragon.cqhttp.entity.CqResult;
 import com.jdragon.cqhttp.entity.GroupMember;
 import com.jdragon.cqhttp.service.MessageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,18 +18,23 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+
+@Slf4j
 @Tag(name = "测试")
 @RequestMapping("/test")
 @RestController
 public class TestController {
 
+    private final DiscordService discordService;
+
     private final MessageService messageService;
 
     private final OpenAiService openAiService;
 
-    public TestController(MessageService messageService, OpenAiService openAiService) {
+    public TestController(MessageService messageService, OpenAiService openAiService, DiscordClient discordClient, DiscordService discordService) {
         this.messageService = messageService;
         this.openAiService = openAiService;
+        this.discordService = discordService;
     }
 
     @Operation(summary = "测试发送信息")
@@ -54,5 +62,18 @@ public class TestController {
     @GetMapping("/aiMsg")
     public String getGroupMemberList(@RequestParam String content) {
         return openAiService.aiMsg("206666041", content);
+    }
+
+    @Operation(summary = "setDcAuth")
+    @GetMapping("/setDcAuth")
+    public String discordMsg(@RequestParam String authorization) {
+        discordService.setAuthorization(authorization);
+        return authorization;
+    }
+
+    @Operation(summary = "discordMsg")
+    @GetMapping("/discordMsg")
+    public List<DiscordMessage> discordMsg(@RequestParam String channelId, @RequestParam Integer limit) {
+        return discordService.getDiscordMessages(channelId, limit);
     }
 }

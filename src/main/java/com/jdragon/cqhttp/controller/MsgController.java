@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.IOException;
 
 @Slf4j
-@RequestMapping
+@RequestMapping("/cqhttp")
 @RestController
 public class MsgController {
 
