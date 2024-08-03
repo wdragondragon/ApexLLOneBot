@@ -44,6 +44,6 @@ public class AgBanHistory extends Model<AgBanHistory> {
     @Override
     public String toString() {
         String banDateStr = banDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        return "Ban in " + banDateStr + "\n" + uid + "\n" + descMsg + "\n\n" + msg + "\n\n[" + platform + "]apex status link[" + statusUid + "]:" + statusUrl;
+        return "Ban in " + banDateStr + "\nuid:" + uid + "\n" + descMsg + "\n\n" + msg + "\n\n[" + platform + "] apex status link [" + statusUid + "]\n" + statusUrl;
     }
 }

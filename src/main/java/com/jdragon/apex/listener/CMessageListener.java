@@ -111,9 +111,15 @@ public class CMessageListener {
             String result = """
                     可用命令：
                     1、@某人 查询ag授权
-                    2、获取[ai/apex_recoils/apex_recoils_server/auto_upgrade_script]体验卡
-                    3、@某人 授权[天|月|周|年|永久]卡[ai/apex_recoils/apex_recoils_server/auto_upgrade_script]
-                    4、生成[数字]张[天|月|周|年|永久]卡[ai/apex_recoils/apex_recoils_server/auto_upgrade_script]
+                    2、获取[申请类型]体验卡
+                    3、@某人 授权[时间类型]卡[申请类型]
+                    4、生成[数字]张[时间类型]卡[申请类型]
+                    5、查封[uid]
+                    6、关注封禁[uid]
+                                        
+                    tips：
+                    时间类型：天|月|周|年|永久
+                    申请类型：ai|apex_recoils|apex_recoils_server|auto_upgrade_script
                     """;
             messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), result);
         }
