@@ -116,6 +116,7 @@ public class CMessageListener {
                     4、生成[数字]张[时间类型]卡[申请类型]
                     5、查封[uid]
                     6、关注封禁[uid]
+                    7、关注封禁[图片]
                                         
                     tips：
                     时间类型：天|月|周|年|永久

@@ -54,6 +54,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
     implementation 'com.squareup.okhttp3:okhttp'
     implementation 'io.github.openfeign:feign-okhttp'
+    implementation 'net.sourceforge.tess4j:tess4j:5.12.0'
 }
 
 tasks.named('test') {

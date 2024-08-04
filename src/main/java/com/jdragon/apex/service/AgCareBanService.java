@@ -43,4 +43,19 @@ public class AgCareBanService extends ServiceImpl<AgCareBanMapper, AgCareBan> {
             messageService.sendGroupMsg(null, Long.valueOf(groupId), atList, msg);
         }
     }
+
+    public boolean careBanUid(Long groupId, Long userId, String uid) {
+        AgCareBan agCareBan = new AgCareBan();
+        agCareBan.setCareType("uid");
+        agCareBan.setCareValue(uid);
+        agCareBan.setGroupId(String.valueOf(groupId));
+        agCareBan.setUserId(String.valueOf(userId));
+
+        AgCareBan one = this.getOne(agCareBan);
+        if (one == null) {
+            this.save(agCareBan);
+            return true;
+        }
+        return false;
+    }
 }
