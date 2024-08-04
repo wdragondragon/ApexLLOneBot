@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jdragon.apex.mapper.AgBanHistoryMapper">
-
+    <select id="todayBanStatic" resultType="com.jdragon.apex.entity.vo.TodayBanStatic">
+        SELECT rank_role, platform, count(*) count, min(rank_range) minRankRange
+        FROM ag_ban_history
+        WHERE DATE (ban_date) = CURDATE()
+        group by rank_role, platform
+        order by rank_role,platform
+    </select>
 </mapper>
