@@ -117,6 +117,9 @@ public class CMessageListener {
                     5、查封[uid]
                     6、关注封禁[uid]
                     7、关注封禁[图片]
+                    8、今天封禁统计
+                    9、关注活跃[uid]
+                    10、关注活跃[图片]
                                         
                     tips：
                     时间类型：天|月|周|年|永久

@@ -4,7 +4,7 @@
     <select id="queryCareBan" resultType="com.jdragon.apex.entity.AgCareBan">
         select *
         from ag_care_ban
-        where care_type = #{type}
+        where care_type = '封禁'
           and care_value = #{value}
     </select>
 </mapper>

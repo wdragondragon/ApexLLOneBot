@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-public class ScheduledTasks {
+public class CareBanScheduler {
 
     private final AgBanHistoryService agBanHistoryService;
 
-    public ScheduledTasks(AgBanHistoryService agBanHistoryService) {
+    public CareBanScheduler(AgBanHistoryService agBanHistoryService) {
         this.agBanHistoryService = agBanHistoryService;
     }
 
