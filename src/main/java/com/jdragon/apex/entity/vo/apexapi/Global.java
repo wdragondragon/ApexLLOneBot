@@ -12,15 +12,15 @@ public class Global {
     private int level;
     private int toNextLevelPercent;
     private int internalUpdateCount;
+    private int levelPrestige;
     private Bans bans;
     private Rank rank;
-    private BattlePass battlepass;
 
     @Data
     public static class Bans {
         private boolean isActive;
         private int remainingSeconds;
-        private String lastBanReason;
+        private String last_banReason;
     }
 
     @Data
@@ -36,12 +36,6 @@ public class Global {
         private double ALStopPercentGlobal;
         private int ALStopIntGlobal;
         private boolean ALSFlag;
-    }
-
-    @Data
-    public static class BattlePass {
-        private Integer level;
-        private Object history;
     }
 
 }
