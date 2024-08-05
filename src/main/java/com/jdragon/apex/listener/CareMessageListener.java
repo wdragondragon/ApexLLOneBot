@@ -89,7 +89,7 @@ public class CareMessageListener {
                     return;
                 }
                 String url = messageArr[1].getData().get("url").toString();
-                String orcToString = OCRExample.orcToString(url);
+                String orcToString = OCRExample.orcToString(url).trim();
                 Matcher matcher = Pattern.compile("ID:\\s*(\\d+)").matcher(orcToString);
                 if (matcher.find()) {
                     String id = matcher.group(1).trim();

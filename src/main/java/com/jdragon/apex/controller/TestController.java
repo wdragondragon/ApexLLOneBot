@@ -4,6 +4,7 @@ package com.jdragon.apex.controller;
 import com.jdragon.apex.client.ApexApiClient;
 import com.jdragon.apex.entity.ApexStatusUserInfo;
 import com.jdragon.apex.entity.vo.DiscordMessage;
+import com.jdragon.apex.entity.vo.apexapi.ApexUser;
 import com.jdragon.apex.handle.ApexStatusHandler;
 import com.jdragon.apex.service.DiscordService;
 import com.jdragon.apex.service.OpenAiService;
@@ -102,8 +103,8 @@ public class TestController {
 
     @Operation(summary = "testApexApi")
     @GetMapping("/testApexApi")
-    public String testApexApi(@RequestParam String platform,
-                              @RequestParam String player) {
+    public ApexUser testApexApi(@RequestParam String platform,
+                                @RequestParam String player) {
         return apexApiClient.bridge(platform, player);
     }
 
