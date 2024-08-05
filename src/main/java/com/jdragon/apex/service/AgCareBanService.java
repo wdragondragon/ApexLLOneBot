@@ -79,8 +79,8 @@ public class AgCareBanService extends ServiceImpl<AgCareBanMapper, AgCareBan> {
     @NotNull
     private static String getDiff(ApexStatusUserInfo userInfo, ApexStatusUserInfo oldUserInfo) {
         String msg = "";
-        if (!userInfo.isOnline() == oldUserInfo.isOnline()) {
-            msg += String.format("你关注的[%s]现在%s", userInfo.getName(), userInfo.isOnline() ? "上线了" : "下线了") + "\n";
+        if (!userInfo.getOnline() == oldUserInfo.getOnline()) {
+            msg += String.format("你关注的[%s]现在%s", userInfo.getName(), userInfo.getOnline() ? "上线了" : "下线了") + "\n";
         }
         if (!Objects.equals(userInfo.getLevel(), oldUserInfo.getLevel())) {
             msg += String.format("你关注的[%s]发生等级变化，从[%s]到[%s]", userInfo.getName(), oldUserInfo.getLevel(), userInfo.getLevel()) + "\n";

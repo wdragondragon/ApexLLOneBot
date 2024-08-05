@@ -28,10 +28,10 @@ public class ApexStatusUserInfo extends Model<ApexStatusUserInfo> {
 
     private Integer rp;
 
-    private boolean online;
+    private Boolean online;
 
     @Override
     public String toString() {
-        return String.format("平台：%s\nID：%s\n等级：%s\n排位分：%s\n当前%s在线", getPlatform(), getName(), getLevel(), getRp(), isOnline() ? "" : "不");
+        return String.format("平台：%s\nID：%s\n等级：%s\n排位分：%s\n当前%s在线", getPlatform(), getName(), getLevel(), getRp(), getOnline() ? "" : "不");
     }
 }
