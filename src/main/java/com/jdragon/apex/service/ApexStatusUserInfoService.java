@@ -11,11 +11,8 @@ import org.springframework.stereotype.Service;
 public class ApexStatusUserInfoService extends ServiceImpl<ApexStatusUserInfoMapper, ApexStatusUserInfo> {
 
     public ApexStatusUserInfo getByUid(String uid) {
-        ApexStatusUserInfo apexStatusUserInfo = new ApexStatusUserInfo();
-        apexStatusUserInfo.setUid(uid);
-
         LambdaQueryWrapper<ApexStatusUserInfo> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.setEntity(apexStatusUserInfo);
+        lambdaQueryWrapper.eq(ApexStatusUserInfo::getUid, uid);
         return getOne(lambdaQueryWrapper);
     }
 
