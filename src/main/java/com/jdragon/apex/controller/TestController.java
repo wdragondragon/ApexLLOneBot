@@ -1,6 +1,7 @@
 package com.jdragon.apex.controller;
 
 
+import com.jdragon.apex.client.ApexApiClient;
 import com.jdragon.apex.entity.ApexStatusUserInfo;
 import com.jdragon.apex.entity.vo.DiscordMessage;
 import com.jdragon.apex.handle.ApexStatusHandler;
@@ -35,11 +36,14 @@ public class TestController {
 
     private final ApexStatusHandler apexStatusHandler;
 
-    public TestController(MessageService messageService, OpenAiService openAiService, DiscordService discordService, ApexStatusHandler apexStatusHandler) {
+    private final ApexApiClient apexApiClient;
+
+    public TestController(MessageService messageService, OpenAiService openAiService, DiscordService discordService, ApexStatusHandler apexStatusHandler, ApexApiClient apexApiClient) {
         this.messageService = messageService;
         this.openAiService = openAiService;
         this.discordService = discordService;
         this.apexStatusHandler = apexStatusHandler;
+        this.apexApiClient = apexApiClient;
     }
 
     @Operation(summary = "测试发送信息")
@@ -95,4 +99,12 @@ public class TestController {
     public ApexStatusUserInfo testProfile(@RequestParam String param) {
         return apexStatusHandler.getUserInfo(param);
     }
+
+    @Operation(summary = "testApexApi")
+    @GetMapping("/testApexApi")
+    public String testApexApi(@RequestParam String platform,
+                              @RequestParam String player) {
+        return apexApiClient.bridge(platform, player);
+    }
+
 }
