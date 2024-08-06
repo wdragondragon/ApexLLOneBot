@@ -44,10 +44,9 @@ public class AgCareBanService extends ServiceImpl<AgCareBanMapper, AgCareBan> {
 
     public void sendCareBanMessage(AgBanHistory agBanHistory) {
         String statusUid = agBanHistory.getStatusUid();
-        ApexStatusUserInfo userInfo = apexUserInfoHandler.getUserInfo(statusUid);
-        List<AgCareBan> agCareBanList = baseMapper.queryCareBan(userInfo.getUid());
+        List<AgCareBan> agCareBanList = baseMapper.queryCareBan(statusUid);
         Map<String, List<AgCareBan>> agCareBanGroup = agCareBanList.stream().collect(Collectors.groupingBy(AgCareBan::getGroupId));
-        String msg = String.format("你关注的[%s]uid为[%s]已被封禁", userInfo.getName(), userInfo.getUid());
+        String msg = String.format("你关注的[%s]uid为[%s]已被封禁", agBanHistory.getUsername(), statusUid);
         for (Map.Entry<String, List<AgCareBan>> entry : agCareBanGroup.entrySet()) {
             String groupId = entry.getKey();
             List<AgCareBan> careBanList = entry.getValue();
