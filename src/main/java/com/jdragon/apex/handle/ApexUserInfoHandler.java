@@ -53,7 +53,7 @@ public class ApexUserInfoHandler {
         apexStatusUserInfo.setLevel(global.getLevel() + global.getLevelPrestige() * 500);
         apexStatusUserInfo.setPlatform(platform);
         apexStatusUserInfo.setRp(rank.getRankScore());
-        apexStatusUserInfo.setOnline(!"offline".equals(realtime.getCurrentState()));
+        apexStatusUserInfo.setOnline(realtime.getIsOnline()==1);
         return apexStatusUserInfo;
     }
 
