@@ -32,6 +32,6 @@ public class ApexStatusUserInfo extends Model<ApexStatusUserInfo> {
 
     @Override
     public String toString() {
-        return String.format("平台：%s\nID：%s\n等级：%s\n排位分：%s\n当前%s在线", getPlatform(), getName(), getLevel(), getRp(), getOnline() ? "" : "不");
+        return String.format("平台：%s\nUID：%s\n名字：%s\n等级：%s\n排位分：%s\n当前%s在线", getPlatform(), getUid(), getName(), getLevel(), getRp(), getOnline() ? "" : "不");
     }
 }
