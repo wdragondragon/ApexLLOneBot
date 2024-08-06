@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jdragon.apex.entity.AgBanHistory;
 import com.jdragon.apex.entity.AgCareBan;
 import com.jdragon.apex.entity.ApexStatusUserInfo;
-import com.jdragon.apex.handle.ApexStatusHandler;
+import com.jdragon.apex.handle.ApexUserInfoHandler;
 import com.jdragon.apex.mapper.AgCareBanMapper;
 import com.jdragon.cqhttp.service.MessageService;
 import lombok.extern.slf4j.Slf4j;
@@ -26,13 +26,13 @@ public class AgCareBanService extends ServiceImpl<AgCareBanMapper, AgCareBan> {
 
     private final MessageService messageService;
 
-    private final ApexStatusHandler apexStatusHandler;
+    private final ApexUserInfoHandler apexUserInfoHandler;
 
     private final ApexStatusUserInfoService apexStatusUserInfoService;
 
-    public AgCareBanService(MessageService messageService, ApexStatusHandler apexStatusHandler, ApexStatusUserInfoService apexStatusUserInfoService) {
+    public AgCareBanService(MessageService messageService, ApexUserInfoHandler apexUserInfoHandler, ApexStatusUserInfoService apexStatusUserInfoService) {
         this.messageService = messageService;
-        this.apexStatusHandler = apexStatusHandler;
+        this.apexUserInfoHandler = apexUserInfoHandler;
         this.apexStatusUserInfoService = apexStatusUserInfoService;
     }
 
@@ -61,7 +61,7 @@ public class AgCareBanService extends ServiceImpl<AgCareBanMapper, AgCareBan> {
         List<AgCareBan> agCareBanList = list(new LambdaQueryWrapper<AgCareBan>().setEntity(agCareBan));
         for (AgCareBan careBan : agCareBanList) {
             String uid = careBan.getCareValue();
-            ApexStatusUserInfo userInfo = apexStatusHandler.getUserInfo(uid);
+            ApexStatusUserInfo userInfo = apexUserInfoHandler.getUserInfo(uid);
             ApexStatusUserInfo oldUserInfo = apexStatusUserInfoService.getByUid(uid);
             if (oldUserInfo != null) {
                 String msg = getDiff(userInfo, oldUserInfo);

@@ -3,6 +3,7 @@ package com.jdragon.apex.handle;
 import com.jdragon.apex.client.ApexStatusClient;
 import com.jdragon.apex.entity.ApexStatusUserInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.regex.Matcher;
@@ -53,10 +54,8 @@ public class ApexStatusHandler {
         userInfo.setPlatform(platform);
         userInfo.setUid(uid);
 
-        String profile = apexStatusClient.profile(platform, uid);
-        Matcher matcher = PATTERN_PROFILE.matcher(profile);
-        if (matcher.find()) {
-            String pid = matcher.group(2);
+        String pid = getPidFromUid(platform, uid);
+        if (StringUtils.isNotBlank(pid)) {
             userInfo.setPid(pid);
             try {
                 String csrfPreProd = apexStatusClient.coreInterface("CSRF_PRE_PROD", platform, pid, COOKIE);
@@ -96,5 +95,14 @@ public class ApexStatusHandler {
             apexStatusUserInfo.setPid(matcherPUID.group(1));
             apexStatusUserInfo.setName(matcherName.group(1));
         }
+    }
+
+    public String getPidFromUid(String platform, String uid) {
+        String profile = apexStatusClient.profile(platform, uid);
+        Matcher matcher = PATTERN_PROFILE.matcher(profile);
+        if (matcher.find()) {
+            return matcher.group(2);
+        }
+        return null;
     }
 }

@@ -5,7 +5,7 @@ import com.jdragon.apex.client.ApexApiClient;
 import com.jdragon.apex.entity.ApexStatusUserInfo;
 import com.jdragon.apex.entity.vo.DiscordMessage;
 import com.jdragon.apex.entity.vo.apexapi.ApexUser;
-import com.jdragon.apex.handle.ApexStatusHandler;
+import com.jdragon.apex.handle.ApexUserInfoHandler;
 import com.jdragon.apex.service.DiscordService;
 import com.jdragon.apex.service.OpenAiService;
 import com.jdragon.cqhttp.entity.CqResult;
@@ -35,15 +35,15 @@ public class TestController {
 
     private final OpenAiService openAiService;
 
-    private final ApexStatusHandler apexStatusHandler;
+    private final ApexUserInfoHandler apexUserInfoHandler;
 
     private final ApexApiClient apexApiClient;
 
-    public TestController(MessageService messageService, OpenAiService openAiService, DiscordService discordService, ApexStatusHandler apexStatusHandler, ApexApiClient apexApiClient) {
+    public TestController(MessageService messageService, OpenAiService openAiService, DiscordService discordService, ApexUserInfoHandler apexUserInfoHandler, ApexApiClient apexApiClient) {
         this.messageService = messageService;
         this.openAiService = openAiService;
         this.discordService = discordService;
-        this.apexStatusHandler = apexStatusHandler;
+        this.apexUserInfoHandler = apexUserInfoHandler;
         this.apexApiClient = apexApiClient;
     }
 
@@ -98,14 +98,14 @@ public class TestController {
     @Operation(summary = "testProfile")
     @GetMapping("/testProfile")
     public ApexStatusUserInfo testProfile(@RequestParam String param) {
-        return apexStatusHandler.getUserInfo(param);
+        return apexUserInfoHandler.getUserInfo(param);
     }
 
     @Operation(summary = "testApexApi")
     @GetMapping("/testApexApi")
     public ApexUser testApexApi(@RequestParam String platform,
                                 @RequestParam String player) {
-        return apexApiClient.bridge(platform, player);
+        return apexApiClient.getByName(platform, player);
     }
 
 }

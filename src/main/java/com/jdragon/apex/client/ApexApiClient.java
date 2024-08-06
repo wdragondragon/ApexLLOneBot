@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface ApexApiClient {
 
     @GetMapping("/bridge")
-    ApexUser bridge(@RequestParam("platform") String platform, @RequestParam("player") String player);
+    ApexUser getByName(@RequestParam("platform") String platform, @RequestParam("player") String player);
+
+    @GetMapping("/bridge")
+    ApexUser getByUid(@RequestParam("platform") String platform, @RequestParam("uid") String uid);
 
 }

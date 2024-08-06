@@ -2,7 +2,7 @@ package com.jdragon.apex.listener;
 
 
 import com.jdragon.apex.entity.ApexStatusUserInfo;
-import com.jdragon.apex.handle.ApexStatusHandler;
+import com.jdragon.apex.handle.ApexUserInfoHandler;
 import com.jdragon.apex.service.AgCareBanService;
 import com.jdragon.cqhttp.CqListener;
 import com.jdragon.cqhttp.constants.MessageType;
@@ -23,14 +23,14 @@ import java.util.regex.Pattern;
 @Component
 public class CareMessageListener {
 
-    private final ApexStatusHandler apexStatusHandler;
+    private final ApexUserInfoHandler apexUserInfoHandler;
 
     private final MessageService messageService;
 
     private final AgCareBanService agCareBanService;
 
-    public CareMessageListener(ApexStatusHandler apexStatusHandler, MessageService messageService, AgCareBanService agCareBanService) {
-        this.apexStatusHandler = apexStatusHandler;
+    public CareMessageListener(ApexUserInfoHandler apexUserInfoHandler, MessageService messageService, AgCareBanService agCareBanService) {
+        this.apexUserInfoHandler = apexUserInfoHandler;
         this.messageService = messageService;
         this.agCareBanService = agCareBanService;
     }
@@ -40,7 +40,7 @@ public class CareMessageListener {
         String rawMessage = message.getRawMessage();
         if (rawMessage.startsWith("apex查询")) {
             String param = rawMessage.replaceAll("apex查询", "").trim();
-            ApexStatusUserInfo userInfo = apexStatusHandler.getUserInfo(param);
+            ApexStatusUserInfo userInfo = apexUserInfoHandler.getUserInfo(param);
             if (userInfo != null) {
                 messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), userInfo.toString());
             } else {
