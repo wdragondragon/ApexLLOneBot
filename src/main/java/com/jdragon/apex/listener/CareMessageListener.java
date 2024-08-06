@@ -68,7 +68,12 @@ public class CareMessageListener {
                 return;
             }
             String value = matcher.group(2);
-            if (agCareBanService.careUid(groupId, userId, value, careType)) {
+            ApexStatusUserInfo userInfo = apexUserInfoHandler.getUserInfo(value);
+            if (userInfo == null) {
+                messageService.sendGroupMsg(msgId, groupId, "用户未找到，关注失败");
+                return;
+            }
+            if (agCareBanService.careUid(groupId, userId, userInfo.getUid(), careType)) {
                 messageService.sendGroupMsg(msgId, groupId, "关注成功");
             } else {
                 messageService.sendGroupMsg(msgId, groupId, "已关注，请勿重复关注");
@@ -93,7 +98,12 @@ public class CareMessageListener {
                 Matcher matcher = Pattern.compile("ID:\\s*(\\d+)").matcher(orcToString);
                 if (matcher.find()) {
                     String id = matcher.group(1).trim();
-                    if (agCareBanService.careUid(message.getGroupId(), message.getUserId(), id, careType)) {
+                    ApexStatusUserInfo userInfo = apexUserInfoHandler.getUserInfo(id);
+                    if (userInfo == null) {
+                        messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), "用户未找到，关注失败");
+                        return;
+                    }
+                    if (agCareBanService.careUid(message.getGroupId(), message.getUserId(), userInfo.getUid(), careType)) {
                         messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), String.format("识别到uid图片，关注%s成功", id));
                     } else {
                         messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), String.format("识别到uid图片，已关注%s，请勿重复关注", id));

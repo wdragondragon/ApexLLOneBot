@@ -43,10 +43,11 @@ public class AgCareBanService extends ServiceImpl<AgCareBanMapper, AgCareBan> {
     }
 
     public void sendCareBanMessage(AgBanHistory agBanHistory) {
-        String uid = agBanHistory.getUid();
-        List<AgCareBan> agCareBanList = baseMapper.queryCareBan(uid);
+        String statusUid = agBanHistory.getStatusUid();
+        ApexStatusUserInfo userInfo = apexUserInfoHandler.getUserInfo(statusUid);
+        List<AgCareBan> agCareBanList = baseMapper.queryCareBan(userInfo.getUid());
         Map<String, List<AgCareBan>> agCareBanGroup = agCareBanList.stream().collect(Collectors.groupingBy(AgCareBan::getGroupId));
-        String msg = String.format("你关注的uid为[%s]已被封禁", uid);
+        String msg = String.format("你关注的[%s]uid为[%s]已被封禁", userInfo.getName(), userInfo.getUid());
         for (Map.Entry<String, List<AgCareBan>> entry : agCareBanGroup.entrySet()) {
             String groupId = entry.getKey();
             List<AgCareBan> careBanList = entry.getValue();
@@ -60,9 +61,12 @@ public class AgCareBanService extends ServiceImpl<AgCareBanMapper, AgCareBan> {
         agCareBan.setCareType("活跃");
         List<AgCareBan> agCareBanList = list(new LambdaQueryWrapper<AgCareBan>().setEntity(agCareBan));
         for (AgCareBan careBan : agCareBanList) {
-            String uid = careBan.getCareValue();
-            ApexStatusUserInfo userInfo = apexUserInfoHandler.getUserInfo(uid);
-            ApexStatusUserInfo oldUserInfo = apexStatusUserInfoService.getByUid(uid);
+            String careValue = careBan.getCareValue();
+            ApexStatusUserInfo userInfo = apexUserInfoHandler.getUserInfo(careValue);
+            if (userInfo == null) {
+                continue;
+            }
+            ApexStatusUserInfo oldUserInfo = apexStatusUserInfoService.getByUid(userInfo.getUid());
             if (oldUserInfo != null) {
                 String msg = getDiff(userInfo, oldUserInfo);
                 userInfo.setId(oldUserInfo.getId());

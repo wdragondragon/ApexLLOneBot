@@ -5,6 +5,6 @@
         select *
         from ag_care_ban
         where care_type = '封禁'
-          and care_value = #{value}
+          and care_value = #{uid}
     </select>
 </mapper>
