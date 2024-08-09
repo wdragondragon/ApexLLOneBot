@@ -13,7 +13,7 @@ public class ApexUser {
     @Data
     public static class Stat {
         private String name;
-        private int value;
+        private String value;
 
     }
 }
