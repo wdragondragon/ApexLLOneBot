@@ -10,9 +10,11 @@ import com.jdragon.cqhttp.entity.CqResult;
 import com.jdragon.cqhttp.entity.GroupMember;
 import com.jdragon.cqhttp.service.MessageService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -111,10 +113,13 @@ public class AgMachineKeysService {
                 agMachineNewMapper.getAuthList("machine", machineCode, validateType);
         if (!authList.isEmpty()) {
             AgMachinesKeys agMachinesKeys = authList.getFirst();
-            CqResult<List<GroupMember>> groupMemberList = messageService.getGroupMemberList(Long.valueOf(agMachinesKeys.getCreateGroup()));
-            List<String> userIdList = groupMemberList.getData().stream()
-                    .map(GroupMember::getUser_id)
-                    .map(String::valueOf).toList();
+            List<String> userIdList = new ArrayList<>();
+            if (StringUtils.isNotBlank(agMachinesKeys.getCreateGroup())) {
+                CqResult<List<GroupMember>> groupMemberList = messageService.getGroupMemberList(Long.valueOf(agMachinesKeys.getCreateGroup()));
+                userIdList = groupMemberList.getData().stream()
+                        .map(GroupMember::getUser_id)
+                        .map(String::valueOf).toList();
+            }
             if (agMachinesKeys.getExternalCard() == 1 || userIdList.contains(agMachinesKeys.getQq())) {
                 if (agMachinesKeys.getLastValTime() == null ||
                         LocalDateTime.now().isAfter(agMachinesKeys.getLastValTime().plusSeconds(45))) {
