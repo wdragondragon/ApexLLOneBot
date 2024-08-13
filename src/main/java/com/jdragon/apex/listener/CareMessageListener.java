@@ -94,10 +94,15 @@ public class CareMessageListener {
                     return;
                 }
                 String url = messageArr[1].getData().get("url").toString();
-                String orcToString = OCRExample.orcToString(url).trim();
-                Matcher matcher = Pattern.compile("ID:\\s*(\\d+)").matcher(orcToString);
-                if (matcher.find()) {
-                    String id = matcher.group(1).trim();
+                String orcToString = OCRExample.orcToString(url).trim().replaceAll("[sS]", "3").replaceAll("/", "7");
+                Matcher matcher = Pattern.compile("(ID:\\s*)?(\\d{20})").matcher(orcToString);
+                if (matcher.find() || (orcToString.startsWith("16") && orcToString.length() == 20)) {
+                    String id;
+                    if (matcher.find()) {
+                        id = matcher.group(1).trim();
+                    } else {
+                        id = orcToString;
+                    }
                     ApexStatusUserInfo userInfo = apexUserInfoHandler.getUserInfo(id);
                     if (userInfo == null) {
                         messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), "用户未找到，关注失败");
