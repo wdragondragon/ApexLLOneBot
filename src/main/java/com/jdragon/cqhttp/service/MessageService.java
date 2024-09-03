@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +45,41 @@ public class MessageService {
         sendPrivateMsg.setMessage(List.of(message).toArray(new Message[0]));
         String result = messageClient.sendPrivateMsg(sendPrivateMsg);
         log.info("发送私聊信息结果：{}", result);
+    }
+
+    public void sendGroupPic(Long msgId, Long groupId, byte[] imageBytes) {
+        String jsonTemplate = """
+                {
+                    "group_id": %d,
+                    "message": [
+                        {
+                            "type": "image",
+                            "data": {
+                                "file": "base64://%s"
+                            }
+                        }
+                    ]
+                }
+                """;
+
+        SendGroupMsg sendGroupMsg = new SendGroupMsg();
+        sendGroupMsg.setGroup_id(groupId);
+        List<Message> messages = new ArrayList<>();
+        if (msgId != null) {
+            Message replyMsg = new Message();
+            replyMsg.setData(Map.of("id", msgId));
+            replyMsg.setType("reply");
+            messages.add(replyMsg);
+        }
+        // 将图片字节数组转换为Base64字符串
+        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+        Message picMessage = new Message();
+        picMessage.setData(Map.of("file", "base64://" + base64Image));
+        picMessage.setType("image");
+        messages.add(picMessage);
+        sendGroupMsg.setMessage(messages.toArray(new Message[0]));
+        String result = messageClient.sendGroupMsg(sendGroupMsg);
+        log.info("发送群聊信息结果：{}", result);
     }
 
     @SneakyThrows

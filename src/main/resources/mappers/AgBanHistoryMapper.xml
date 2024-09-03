@@ -8,4 +8,8 @@
         group by rank_role, platform
         order by rank_role,platform
     </select>
+
+    <select id="todayBan" resultType="com.jdragon.apex.entity.AgBanHistory">
+        select * from ag_ban_history where DATE (ban_date) = CURDATE() order by rank_range
+    </select>
 </mapper>

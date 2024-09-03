@@ -83,7 +83,11 @@ public class AgBanHistoryService extends ServiceImpl<AgBanHistoryMapper, AgBanHi
     }
 
     public AgBanHistory queryBanHistoryByUid(String uid) {
-        return getOne(new LambdaQueryWrapper<AgBanHistory>().eq(AgBanHistory::getUid, uid));
+        LambdaQueryWrapper<AgBanHistory> eq = new LambdaQueryWrapper<AgBanHistory>()
+                .eq(AgBanHistory::getUid, uid)
+                .or(e -> e.eq(AgBanHistory::getStatusUid, uid))
+                .or(e -> e.eq(AgBanHistory::getUsername, uid));
+        return getOne(eq);
     }
 
 }

@@ -12,4 +12,5 @@ public interface AgBanHistoryMapper extends BaseMapper<AgBanHistory> {
 
     List<TodayBanStatic> todayBanStatic();
 
+    List<AgBanHistory> todayBan();
 }
