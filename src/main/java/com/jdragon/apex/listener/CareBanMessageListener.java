@@ -76,7 +76,7 @@ public class CareBanMessageListener {
             Map<String, Object> data = new HashMap<>();
             data.put("items", todayBanList);
             String s = FreemarkerUtil.printString("", "banInfo.ftl", data);
-            byte[] imageBytes = html2ImageBiz.stringToPng(s, "--width 500");
+            byte[] imageBytes = html2ImageBiz.stringToPng(s, "--width 600");
             messageService.sendGroupPic(message.getMessageId(), message.getGroupId(), imageBytes);
         }
     }

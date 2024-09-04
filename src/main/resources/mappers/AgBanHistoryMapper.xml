@@ -12,4 +12,8 @@
     <select id="todayBan" resultType="com.jdragon.apex.entity.AgBanHistory">
         select * from ag_ban_history where DATE (ban_date) = CURDATE() order by rank_range
     </select>
+
+    <select id="banInNearlyNDays" resultType="com.jdragon.apex.entity.AgBanHistory">
+        select * from ag_ban_history where DATE (ban_date) >= date_sub(CURDATE(),INTERVAL #{day} DAY) order by rank_range
+    </select>
 </mapper>
