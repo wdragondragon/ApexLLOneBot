@@ -6,6 +6,7 @@ import com.jdragon.cqhttp.config.ObjectMapperHolder;
 import com.jdragon.cqhttp.entity.*;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -47,7 +48,7 @@ public class MessageService {
         log.info("发送私聊信息结果：{}", result);
     }
 
-    public void sendGroupPic(Long msgId, Long groupId, byte[] imageBytes) {
+    public void sendGroupPic(Long msgId, Long groupId, String message, byte[] imageBytes) {
         String jsonTemplate = """
                 {
                     "group_id": %d,
@@ -70,6 +71,12 @@ public class MessageService {
             replyMsg.setData(Map.of("id", msgId));
             replyMsg.setType("reply");
             messages.add(replyMsg);
+        }
+        if (StringUtils.isNotBlank(message)) {
+            Message msg = new Message();
+            msg.setData(Map.of("text", message));
+            msg.setType("text");
+            messages.add(msg);
         }
         // 将图片字节数组转换为Base64字符串
         String base64Image = Base64.getEncoder().encodeToString(imageBytes);

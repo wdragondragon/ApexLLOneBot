@@ -75,9 +75,10 @@ public class CareBanMessageListener {
             }
             Map<String, Object> data = new HashMap<>();
             data.put("items", todayBanList);
+            data.put("range", "today");
             String s = FreemarkerUtil.printString("", "banInfo.ftl", data);
-            byte[] imageBytes = html2ImageBiz.stringToPng(s, "--width 600");
-            messageService.sendGroupPic(message.getMessageId(), message.getGroupId(), imageBytes);
+            byte[] imageBytes = html2ImageBiz.stringToPng(s, "--width 500");
+            messageService.sendGroupPic(message.getMessageId(), message.getGroupId(), "更多详情请访问：https://apex.tyu.wiki/ban/today", imageBytes);
         }
     }
 }
