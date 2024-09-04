@@ -13,9 +13,8 @@
             padding: 0;
         }
         .container {
-            width: 90%;
-            max-width: 600px;
-            margin: 50px auto;
+            max-width: 500px;
+            margin: 0 auto;
             padding: 20px;
         }
         .item {

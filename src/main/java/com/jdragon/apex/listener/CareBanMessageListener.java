@@ -74,15 +74,9 @@ public class CareBanMessageListener {
                 return;
             }
             Map<String, Object> data = new HashMap<>();
-            data.put("title", "今天封禁列表");
-            data.put("tableHeaders", Arrays.asList("名字", "角色", "排名", "观战id", "uid"));
-            List<List<String>> banData = todayBanList.stream().map(todayBan ->
-                    Arrays.asList(todayBan.getUsername(), todayBan.getRankRole(),
-                            todayBan.getRankRange(), todayBan.getUid(),
-                            todayBan.getStatusUid())).toList();
-            data.put("tableRows", banData);
-            String s = FreemarkerUtil.printString("", "table.ftl", data);
-            byte[] imageBytes = html2ImageBiz.stringToPng(s);
+            data.put("items", todayBanList);
+            String s = FreemarkerUtil.printString("", "banInfo.ftl", data);
+            byte[] imageBytes = html2ImageBiz.stringToPng(s, "--width 500");
             messageService.sendGroupPic(message.getMessageId(), message.getGroupId(), imageBytes);
         }
     }

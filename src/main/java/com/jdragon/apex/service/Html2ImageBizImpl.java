@@ -34,7 +34,7 @@ public class Html2ImageBizImpl {
      */
     private String tmpFilePath = "C:/dev/tmp";
 
-    public byte[] stringToPng(String htmlString) {
+    public byte[] stringToPng(String htmlString, String... params) {
         if (StringUtils.isBlank(wkcmd)) {
             throw new UnsupportedOperationException("未配置wkhtmltox的使用命令参数，功能不可用");
         }
@@ -49,7 +49,7 @@ public class Html2ImageBizImpl {
             // 存HTML文件
             htmlFileName = saveHtml2File(htmlString);
             // 转为PNG,获取其文件名
-            pngFileName = html2Png(htmlFileName);
+            pngFileName = html2Png(htmlFileName, params);
             // 将PNG读取为bytes
             return readFile2ByteArray(pngFileName);
 
@@ -85,12 +85,16 @@ public class Html2ImageBizImpl {
      *
      * @param htmlFileName HTML文件路径
      */
-    private String html2Png(String htmlFileName) {
+    private String html2Png(String htmlFileName, String... params) {
         String pngFileName = getRandomFileName(".png");
 
         StringBuilder cmd = new StringBuilder();
         cmd.append(wkcmd);
         cmd.append(" ");
+        for (String param : params) {
+            cmd.append(param);
+            cmd.append(" ");
+        }
         cmd.append(htmlFileName);
         cmd.append(" ");
         cmd.append(pngFileName);
