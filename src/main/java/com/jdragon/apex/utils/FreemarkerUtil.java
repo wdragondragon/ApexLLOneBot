@@ -1,5 +1,6 @@
 package com.jdragon.apex.utils;
 
+import com.jdragon.apex.holder.SpringContextHolder;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -20,7 +21,7 @@ public class FreemarkerUtil {
     public static Configuration getDefaultConfig() {
         Configuration configuration = getConfigByVersion();
         configuration.setClassForTemplateLoading(
-                FreemarkerUtil.class, "/templates/freemarker/");
+                FreemarkerUtil.class, "/templates/");
         configuration.setDefaultEncoding("UTF-8");
         return configuration;
     }
@@ -31,7 +32,17 @@ public class FreemarkerUtil {
      * 它们都会使用他们自己私有的 Configuration 实例）
      */
     public static Configuration getConfig() {
-        Configuration cfg = getDefaultConfig();;
+        Configuration cfg = null;
+        try {
+            try {
+                cfg = SpringContextHolder.getBean(Configuration.class);
+            } catch (IllegalStateException e) {
+                cfg = getDefaultConfig();
+            }
+        } catch (Exception e) {
+            log.info("系统异常：{}", e.getMessage(), e);
+        }
+
         return cfg;
     }
 

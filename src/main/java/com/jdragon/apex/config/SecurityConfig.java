@@ -7,12 +7,13 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.SecurityConfigurer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,11 +42,18 @@ public class SecurityConfig {
                         .requestMatchers("/auth/login").permitAll()
                         .requestMatchers(createAntPathReqMatcher()).permitAll()
                         .anyRequest().authenticated()
-                )
+                ).formLogin(AbstractAuthenticationFilterConfigurer::permitAll)  // 允许所有用户访问登录页面
+                .logout(LogoutConfigurer::permitAll)  // 允许所有用户执行注销操作
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return (web) -> web.ignoring()
+                .requestMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
     }
 
     /**
@@ -64,13 +72,15 @@ public class SecurityConfig {
                 AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/cqhttp/**"),
                 AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/ag/machineBindKeys"),
                 AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/ag/validate"),
+                AntPathRequestMatcher.antMatcher("/ban/today"),
 
                 AntPathRequestMatcher.antMatcher("/swagger-ui.html"),
                 AntPathRequestMatcher.antMatcher("/swagger-resources/**"),
                 AntPathRequestMatcher.antMatcher("/webjars/**"),
                 AntPathRequestMatcher.antMatcher("/v3/api-docs/**"),
                 AntPathRequestMatcher.antMatcher("/*/api-docs"),
-                AntPathRequestMatcher.antMatcher("/druid/**")
+                AntPathRequestMatcher.antMatcher("/druid/**"),
+                AntPathRequestMatcher.antMatcher("/resources/**")
         };
     }
 
