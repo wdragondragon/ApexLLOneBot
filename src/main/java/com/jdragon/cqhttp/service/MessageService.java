@@ -4,6 +4,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.jdragon.cqhttp.client.CqHttpClient;
 import com.jdragon.cqhttp.config.ObjectMapperHolder;
 import com.jdragon.cqhttp.entity.*;
+import com.jdragon.cqhttp.entity.msg.AtMessage;
+import com.jdragon.cqhttp.entity.msg.ImageMessage;
+import com.jdragon.cqhttp.entity.msg.ReplyMessage;
+import com.jdragon.cqhttp.entity.msg.TextMessage;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -23,115 +27,68 @@ public class MessageService {
         this.messageClient = messageClient;
     }
 
-    @SneakyThrows
-    public void sendPrivateMsg(long userId, String text) {
-        String jsonTemplate = """
-                {
-                    "user_id": %d,
-                    "message": [
-                        {
-                            "type": "text",
-                            "data": {
-                                "text": "%s"
-                            }
-                        }
-                    ]
-                }
-                """;
+    public void sendPrivateMsg(long userId, Message... messages) {
         SendPrivateMsg sendPrivateMsg = new SendPrivateMsg();
         sendPrivateMsg.setUser_id(userId);
-        Message message = new Message();
-        message.setData(Map.of("text", text));
-        message.setType("text");
-        sendPrivateMsg.setMessage(List.of(message).toArray(new Message[0]));
+        sendPrivateMsg.setMessage(messages);
         String result = messageClient.sendPrivateMsg(sendPrivateMsg);
         log.info("发送私聊信息结果：{}", result);
     }
 
-    public void sendGroupPic(Long msgId, Long groupId, String message, byte[] imageBytes) {
-        String jsonTemplate = """
-                {
-                    "group_id": %d,
-                    "message": [
-                        {
-                            "type": "image",
-                            "data": {
-                                "file": "base64://%s"
-                            }
-                        }
-                    ]
-                }
-                """;
-
+    public void sendGroupMsg(long groupId, Message... messages) {
         SendGroupMsg sendGroupMsg = new SendGroupMsg();
         sendGroupMsg.setGroup_id(groupId);
+        sendGroupMsg.setMessage(messages);
+        String result = messageClient.sendGroupMsg(sendGroupMsg);
+        log.info("发送群聊信息结果：{}", result);
+    }
+
+
+    @SneakyThrows
+    public void sendPrivateMsg(long userId, String text) {
+        sendPrivateMsg(userId, new TextMessage(text));
+    }
+
+    public void sendGroupPic(Long msgId, Long groupId, String message, byte[] imageBytes) {
         List<Message> messages = new ArrayList<>();
         if (msgId != null) {
-            Message replyMsg = new Message();
-            replyMsg.setData(Map.of("id", msgId));
-            replyMsg.setType("reply");
+            Message replyMsg = new ReplyMessage(msgId);
             messages.add(replyMsg);
         }
         if (StringUtils.isNotBlank(message)) {
-            Message msg = new Message();
-            msg.setData(Map.of("text", message));
-            msg.setType("text");
+            Message msg = new TextMessage(message);
             messages.add(msg);
         }
         // 将图片字节数组转换为Base64字符串
         String base64Image = Base64.getEncoder().encodeToString(imageBytes);
-        Message picMessage = new Message();
-        picMessage.setData(Map.of("file", "base64://" + base64Image));
-        picMessage.setType("image");
+        Message picMessage = new ImageMessage("base64://" + base64Image);
         messages.add(picMessage);
-        sendGroupMsg.setMessage(messages.toArray(new Message[0]));
-        String result = messageClient.sendGroupMsg(sendGroupMsg);
-        log.info("发送群聊信息结果：{}", result);
+        sendGroupMsg(groupId, messages.toArray(new Message[0]));
     }
 
     @SneakyThrows
     public void sendGroupMsg(Long msgId, Long groupId, List<Long> atList, String text) {
-        String jsonTemplate = """
-                {
-                    "group_id": %d,
-                    "message": [
-                        {
-                            "type": "text",
-                            "data": {
-                                "text": "%s"
-                            }
-                        }
-                    ]
-                }
-                """;
-        SendGroupMsg sendGroupMsg = new SendGroupMsg();
-        sendGroupMsg.setGroup_id(groupId);
         List<Message> messages = new ArrayList<>();
         if (msgId != null) {
-            Message replyMsg = new Message();
-            replyMsg.setData(Map.of("id", msgId));
-            replyMsg.setType("reply");
+            Message replyMsg = new ReplyMessage(msgId);
             messages.add(replyMsg);
         }
         for (Long at : atList) {
-            Message atMsg = new Message();
-            atMsg.setData(Map.of("qq", at));
-            atMsg.setType("at");
+            Message atMsg = new AtMessage(at);
             messages.add(atMsg);
         }
-
-        Message message = new Message();
-        message.setData(Map.of("text", text));
-        message.setType("text");
+        Message message = new TextMessage(text);
         messages.add(message);
-        sendGroupMsg.setMessage(messages.toArray(new Message[0]));
-        String result = messageClient.sendGroupMsg(sendGroupMsg);
-        log.info("发送群聊信息结果：{}", result);
+        sendGroupMsg(groupId, messages.toArray(new Message[0]));
     }
 
     @SneakyThrows
     public void sendGroupMsg(Long msgId, Long groupId, String text) {
-        sendGroupMsg(msgId, groupId, new ArrayList<>(), text);
+        if (msgId == null) {
+            sendGroupMsg(groupId, new TextMessage(text));
+        } else {
+            sendGroupMsg(groupId, new ReplyMessage(msgId), new TextMessage(text));
+        }
     }
 
     @SneakyThrows

@@ -1,8 +1,9 @@
 package com.jdragon.cqhttp.entity;
 
+import com.jdragon.cqhttp.entity.msg.MessageTypeEnums;
 import lombok.Data;
+import lombok.SneakyThrows;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,6 +21,20 @@ public class MessageChain {
             return null;
         }
         return messages.get(index);
+    }
+
+    @SneakyThrows
+    public MessageChain(Message[] messages) {
+        for (Message message : messages) {
+            MessageTypeEnums anEnum = MessageTypeEnums.getEnum(message.getType());
+            if (anEnum != null) {
+                Class<? extends Message> clazz = anEnum.getClazz();
+                Message messageNew = clazz.getConstructor().newInstance();
+                messageNew.init(message);
+                message = messageNew;
+            }
+            addMessage(message);
+        }
     }
 
 }

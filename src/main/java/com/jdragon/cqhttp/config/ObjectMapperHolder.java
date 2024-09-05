@@ -1,5 +1,6 @@
 package com.jdragon.cqhttp.config;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 
@@ -9,5 +10,6 @@ public class ObjectMapperHolder {
     static {
         MAPPER = new ObjectMapper();
         MAPPER.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
+        MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 }

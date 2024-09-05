@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.jdragon.cqhttp.config.ObjectMapperHolder;
 import com.jdragon.cqhttp.entity.Message;
+import com.jdragon.cqhttp.entity.MessageChain;
 import com.jdragon.cqhttp.entity.Sender;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,10 +32,13 @@ public class ChatMessage extends BaseMessage {
     private String postType;
     private long groupId;
 
+    private MessageChain messageChain;
+
     public static ChatMessage fromJson(String json) throws IOException {
         ChatMessage chatMessage = ObjectMapperHolder.MAPPER.readValue(json, ChatMessage.class);
-        chatMessage.validateAttributes(ObjectMapperHolder.MAPPER.convertValue(chatMessage, new TypeReference<Map<String, Object>>() {
+        chatMessage.validateAttributes(ObjectMapperHolder.MAPPER.convertValue(chatMessage, new TypeReference<>() {
         }));
+        chatMessage.setMessageChain(new MessageChain(chatMessage.getMessage()));
         return chatMessage;
     }
 
