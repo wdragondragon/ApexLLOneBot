@@ -51,7 +51,7 @@ public class AgCareBanService extends ServiceImpl<AgCareBanMapper, AgCareBan> {
             String groupId = entry.getKey();
             List<AgCareBan> careBanList = entry.getValue();
             List<Long> atList = careBanList.stream().map(AgCareBan::getUserId).map(Long::valueOf).toList();
-            messageService.sendGroupMsg(null, Long.valueOf(groupId), atList, msg);
+            messageService.sendGroupMsg(Long.valueOf(groupId), atList, msg);
         }
     }
 
@@ -71,7 +71,7 @@ public class AgCareBanService extends ServiceImpl<AgCareBanMapper, AgCareBan> {
                 userInfo.setId(oldUserInfo.getId());
                 apexStatusUserInfoService.updateById(userInfo);
                 if (StringUtils.isNotBlank(msg)) {
-                    messageService.sendGroupMsg(null, Long.valueOf(careBan.getGroupId()), List.of(Long.valueOf(careBan.getUserId())), msg);
+                    messageService.sendGroupMsg(Long.valueOf(careBan.getGroupId()), List.of(Long.valueOf(careBan.getUserId())), msg);
                 }
             } else {
                 apexStatusUserInfoService.save(userInfo);

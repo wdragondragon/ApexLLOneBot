@@ -76,7 +76,7 @@ public class AgBanHistoryService extends ServiceImpl<AgBanHistoryMapper, AgBanHi
                     agBanHistory.setPlatform(platform);
                 }
                 this.saveOrUpdate(agBanHistory);
-                messageService.sendGroupMsg(null, 206666041L, agBanHistory.toString());
+                messageService.sendGroupMsg(206666041L, agBanHistory.toString());
                 agCareBanService.sendCareBanMessage(agBanHistory);
             }
         }

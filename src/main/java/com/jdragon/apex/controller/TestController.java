@@ -58,7 +58,7 @@ public class TestController {
     @Operation(summary = "测试发送信息")
     @GetMapping("/sendGroupMsg")
     public String sendGroupMsg(@RequestParam Long groupId, @RequestParam String msg) {
-        messageService.sendGroupMsg(null, groupId, msg);
+        messageService.sendGroupMsg(groupId, msg);
         return "成功";
     }
 
@@ -90,7 +90,7 @@ public class TestController {
     @Operation(summary = "testAt")
     @GetMapping("/testAt")
     public String testAt() {
-        messageService.sendGroupMsg(null, 206666041L, Arrays.asList(1061917196L, 1061917110L), "at测试");
+        messageService.sendGroupMsg(206666041L, Arrays.asList(1061917196L, 1061917110L), "at测试");
         return "发送成功";
     }
 

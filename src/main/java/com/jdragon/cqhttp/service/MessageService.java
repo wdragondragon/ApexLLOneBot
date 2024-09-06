@@ -57,30 +57,9 @@ public class MessageService {
         sendPrivateMsg(userId, new TextMessage(text));
     }
 
-    public void sendGroupPic(Long msgId, Long groupId, String message, byte[] imageBytes) {
-        List<Message> messages = new ArrayList<>();
-        if (msgId != null) {
-            Message replyMsg = new ReplyMessage(msgId);
-            messages.add(replyMsg);
-        }
-        if (StringUtils.isNotBlank(message)) {
-            Message msg = new TextMessage(message);
-            messages.add(msg);
-        }
-        // 将图片字节数组转换为Base64字符串
-        String base64Image = Base64.getEncoder().encodeToString(imageBytes);
-        Message picMessage = new ImageMessage("base64://" + base64Image);
-        messages.add(picMessage);
-        sendGroupMsg(groupId, messages.toArray(new Message[0]));
-    }
-
     @SneakyThrows
-    public void sendGroupMsg(Long msgId, Long groupId, List<Long> atList, String text) {
+    public void sendGroupMsg(Long groupId, List<Long> atList, String text) {
         List<Message> messages = new ArrayList<>();
-        if (msgId != null) {
-            Message replyMsg = new ReplyMessage(msgId);
-            messages.add(replyMsg);
-        }
         for (Long at : atList) {
             Message atMsg = new AtMessage(at);
             messages.add(atMsg);
@@ -91,12 +70,8 @@ public class MessageService {
     }
 
     @SneakyThrows
-    public void sendGroupMsg(Long msgId, Long groupId, String text) {
-        if (msgId == null) {
-            sendGroupMsg(groupId, new TextMessage(text));
-        } else {
-            sendGroupMsg(groupId, new ReplyMessage(msgId), new TextMessage(text));
-        }
+    public void sendGroupMsg(Long groupId, String text) {
+        sendGroupMsg(groupId, new TextMessage(text));
     }
 
     @SneakyThrows
