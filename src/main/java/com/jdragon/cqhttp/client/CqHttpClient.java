@@ -1,9 +1,6 @@
 package com.jdragon.cqhttp.client;
 
-import com.jdragon.cqhttp.entity.CqResult;
-import com.jdragon.cqhttp.entity.GroupMember;
-import com.jdragon.cqhttp.entity.SendGroupMsg;
-import com.jdragon.cqhttp.entity.SendPrivateMsg;
+import com.jdragon.cqhttp.entity.*;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,10 +12,10 @@ import java.util.Map;
 public interface CqHttpClient {
 
     @PostMapping("/send_private_msg")
-    String sendPrivateMsg(@RequestBody SendPrivateMsg request);
+    String sendPrivateMsg(@RequestBody SendMsg request);
 
     @PostMapping("/send_group_msg")
-    String sendGroupMsg(@RequestBody SendGroupMsg request);
+    String sendGroupMsg(@RequestBody SendMsg request);
 
     @PostMapping("/get_group_member_list")
     CqResult<List<GroupMember>> getGroupMemberList(@RequestBody Map<String, Object> request);

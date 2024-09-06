@@ -47,14 +47,12 @@ public class CMessageListener {
 
     @CqListener(type = MessageType.CHAT_MESSAGE, subType = "group")
     public void checkAgAuth(final ChatMessage message) {
-        long groupId = message.getGroupId();
-        long msgId = message.getMessageId();
         Message[] messageArray = message.getMessage();
         if (messageArray[0].getType().equals("at") && messageArray.length == 2) {
             String qq = String.valueOf(messageArray[0].getData().get("qq")).trim();
             String text = String.valueOf(messageArray[1].getData().get("text")).trim();
             if ("查询ag授权".equals(text)) {
-                messageService.sendGroupMsg(msgId, groupId, getAuthStr("qq", qq));
+                message.reply(getAuthStr("qq", qq));
             }
         }
     }
@@ -68,15 +66,15 @@ public class CMessageListener {
         if (matcher.find()) {
             String validateType = matcher.group(1);
             if (!VALIDATE_TYPE.contains(validateType)) {
-                messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), "获取类型只能为:" + Strings.join(VALIDATE_TYPE, '/') + "，如果你想申请ai体验卡，请输入：获取ai体验卡");
+                message.reply("获取类型只能为:" + Strings.join(VALIDATE_TYPE, '/') + "，如果你想申请ai体验卡，请输入：获取ai体验卡");
                 return;
             }
             String key = agMachineKeysService.createExperienceCardByQQ(String.valueOf(userId), String.valueOf(groupId), validateType);
             String retMsg = String.format("获取%s体验卡成功，卡密为：%s", validateType, key);
-            messageService.sendPrivateMsg(userId, retMsg);
+            message.replyPrivate(retMsg);
             String selfMsg = String.format("群号[%s]，用户qq[%s]申请了一张%s体验卡，卡密为：%s", groupId, userId, validateType, key);
             messageService.sendPrivateMsg(selfId, selfMsg);
-            messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), retMsg);
+            message.reply(retMsg);
         }
     }
 
@@ -95,11 +93,11 @@ public class CMessageListener {
                 String keyType = matcher.group(1);
                 String validateType = matcher.group(2);
                 String key = agKeysService.createKey(qq, keyType, validateType, String.valueOf(groupId));
-                messageService.sendPrivateMsg(userId, String.format("授权给[%s]的[%s%s卡]，卡密为:[%s]",
+                message.replyPrivate(String.format("授权给[%s]的[%s%s卡]，卡密为:[%s]",
                         qq, validateType, keyType, key));
                 messageService.sendPrivateMsg(Long.parseLong(qq), String.format("[%s]授权给你的[%s%s卡]，卡密为:[%s]",
                         userId, validateType, keyType, key));
-                messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), "卡密已私聊，请查收后妥善保管。");
+                message.reply("卡密已私聊，请查收后妥善保管。");
             }
         }
     }
@@ -125,7 +123,7 @@ public class CMessageListener {
                     时间类型：天|月|周|年|永久
                     申请类型：ai|apex_recoils|apex_recoils_server|auto_upgrade_script
                     """;
-            messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), result);
+            message.reply(result);
         }
     }
 
@@ -142,10 +140,8 @@ public class CMessageListener {
             String validateType = matcher.group(3);
             List<String> keyList = agKeysService.createKeysExt(createNumber, validateType, keyType);
             String keyStr = Strings.join(keyList, '\n');
-            messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(),
-                    String.format("生成%d张%s%s卡成功，已私聊，请查收后妥善保管。", createNumber, validateType, keyType));
-            messageService.sendPrivateMsg(message.getUserId(),
-                    String.format("生成%d张%s%s卡成功，卡密：\n%s", createNumber, validateType, keyType, keyStr));
+            message.reply(String.format("生成%d张%s%s卡成功，已私聊，请查收后妥善保管。", createNumber, validateType, keyType));
+            message.replyPrivate(String.format("生成%d张%s%s卡成功，卡密：\n%s", createNumber, validateType, keyType, keyStr));
         }
     }
 
@@ -154,14 +150,14 @@ public class CMessageListener {
         Message[] messageArray = message.getMessage();
         if ("private".equals(message.getType())) {
             String reply = openAiService.aiMsg(String.valueOf(message.getSender().getUserId()), message.getRawMessage());
-            messageService.sendPrivateMsg(message.getUserId(), reply);
+            message.reply(reply);
         } else if ("group".equals(message.getType())) {
             if (messageArray[0].getType().equals("at") && messageArray.length == 2) {
                 String qq = String.valueOf(messageArray[0].getData().get("qq"));
                 if (Objects.equals(qq, String.valueOf(message.getSelfId()))) {
                     String text = messageArray[1].getData().get("text").toString().trim();
                     String reply = openAiService.aiMsg(String.valueOf(message.getGroupId()), text);
-                    messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), reply);
+                    message.reply(reply);
                 }
             }
         }

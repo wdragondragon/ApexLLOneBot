@@ -8,7 +8,6 @@ import com.jdragon.cqhttp.CqListener;
 import com.jdragon.cqhttp.constants.MessageType;
 import com.jdragon.cqhttp.entity.Message;
 import com.jdragon.cqhttp.message.ChatMessage;
-import com.jdragon.cqhttp.service.MessageService;
 import com.jdragon.test.OCRExample;
 import lombok.extern.slf4j.Slf4j;
 import net.sourceforge.tess4j.TesseractException;
@@ -25,13 +24,10 @@ public class CareMessageListener {
 
     private final ApexUserInfoHandler apexUserInfoHandler;
 
-    private final MessageService messageService;
-
     private final AgCareBanService agCareBanService;
 
-    public CareMessageListener(ApexUserInfoHandler apexUserInfoHandler, MessageService messageService, AgCareBanService agCareBanService) {
+    public CareMessageListener(ApexUserInfoHandler apexUserInfoHandler, AgCareBanService agCareBanService) {
         this.apexUserInfoHandler = apexUserInfoHandler;
-        this.messageService = messageService;
         this.agCareBanService = agCareBanService;
     }
 
@@ -42,9 +38,9 @@ public class CareMessageListener {
             String param = rawMessage.replaceAll("apex查询", "").trim();
             ApexStatusUserInfo userInfo = apexUserInfoHandler.getUserInfo(param);
             if (userInfo != null) {
-                messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), userInfo.toString());
+                message.reply(userInfo.toString());
             } else {
-                messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), "未查询到该玩家");
+                message.reply("未查询到该玩家");
             }
         }
     }
@@ -64,19 +60,19 @@ public class CareMessageListener {
         if (matcher.find()) {
             String careType = matcher.group(1);
             if (!Arrays.asList("封禁", "活跃").contains(careType)) {
-                messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), "只允许关注[封禁|活跃]");
+                message.reply("只允许关注[封禁|活跃]");
                 return;
             }
             String value = matcher.group(2);
             ApexStatusUserInfo userInfo = apexUserInfoHandler.getUserInfo(value);
             if (userInfo == null) {
-                messageService.sendGroupMsg(msgId, groupId, "用户未找到，关注失败");
+                message.reply("用户未找到，关注失败");
                 return;
             }
             if (agCareBanService.careUid(groupId, userId, userInfo.getUid(), careType)) {
-                messageService.sendGroupMsg(msgId, groupId, "关注成功");
+                message.reply("关注成功");
             } else {
-                messageService.sendGroupMsg(msgId, groupId, "已关注，请勿重复关注");
+                message.reply("已关注，请勿重复关注");
             }
         }
     }
@@ -90,7 +86,7 @@ public class CareMessageListener {
             if (text.trim().startsWith("关注")) {
                 String careType = text.replaceAll("关注", "");
                 if (!Arrays.asList("封禁", "活跃").contains(careType)) {
-                    messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), "只允许关注[封禁|活跃]");
+                    message.reply("只允许关注[封禁|活跃]");
                     return;
                 }
                 String url = messageArr[1].getData().get("url").toString();
@@ -105,16 +101,16 @@ public class CareMessageListener {
                     }
                     ApexStatusUserInfo userInfo = apexUserInfoHandler.getUserInfo(id);
                     if (userInfo == null) {
-                        messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), "用户未找到，关注失败");
+                        message.reply("用户未找到，关注失败");
                         return;
                     }
                     if (agCareBanService.careUid(message.getGroupId(), message.getUserId(), userInfo.getUid(), careType)) {
-                        messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), String.format("识别到uid图片，关注%s成功", id));
+                        message.reply(String.format("识别到uid图片，关注%s成功", id));
                     } else {
-                        messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), String.format("识别到uid图片，已关注%s，请勿重复关注", id));
+                        message.reply(String.format("识别到uid图片，已关注%s，请勿重复关注", id));
                     }
                 } else {
-                    messageService.sendGroupMsg(message.getMessageId(), message.getGroupId(), "请发送正确的uid截图");
+                    message.reply("请发送正确的uid截图");
                 }
             }
         }

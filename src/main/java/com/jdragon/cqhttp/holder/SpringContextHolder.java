@@ -1,4 +1,4 @@
-package com.jdragon.apex.holder;
+package com.jdragon.cqhttp.holder;
 
 import lombok.NonNull;
 import org.springframework.beans.factory.DisposableBean;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
  * @author llk
  * @date 2019-10-09 14:53
  */
-@Component
+@Component("cqHttpSpringContextHolder")
 public class SpringContextHolder implements ApplicationContextAware, DisposableBean {
 
     private static ApplicationContext applicationContext = null;

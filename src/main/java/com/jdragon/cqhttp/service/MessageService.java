@@ -27,20 +27,28 @@ public class MessageService {
         this.messageClient = messageClient;
     }
 
+    public void sendMsg(SendMsg sendMsg) {
+        if (sendMsg.getGroup_id() != null) {
+            String result = messageClient.sendGroupMsg(sendMsg);
+            log.info("发送群聊信息结果：{}", result);
+        } else {
+            String result = messageClient.sendPrivateMsg(sendMsg);
+            log.info("发送私聊信息结果：{}", result);
+        }
+    }
+
     public void sendPrivateMsg(long userId, Message... messages) {
-        SendPrivateMsg sendPrivateMsg = new SendPrivateMsg();
+        SendMsg sendPrivateMsg = new SendMsg();
         sendPrivateMsg.setUser_id(userId);
         sendPrivateMsg.setMessage(messages);
-        String result = messageClient.sendPrivateMsg(sendPrivateMsg);
-        log.info("发送私聊信息结果：{}", result);
+        sendMsg(sendPrivateMsg);
     }
 
     public void sendGroupMsg(long groupId, Message... messages) {
-        SendGroupMsg sendGroupMsg = new SendGroupMsg();
+        SendMsg sendGroupMsg = new SendMsg();
         sendGroupMsg.setGroup_id(groupId);
         sendGroupMsg.setMessage(messages);
-        String result = messageClient.sendGroupMsg(sendGroupMsg);
-        log.info("发送群聊信息结果：{}", result);
+        sendMsg(sendGroupMsg);
     }
 
 

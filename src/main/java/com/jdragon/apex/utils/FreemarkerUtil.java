@@ -1,6 +1,6 @@
 package com.jdragon.apex.utils;
 
-import com.jdragon.apex.holder.SpringContextHolder;
+import com.jdragon.cqhttp.holder.SpringContextHolder;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
