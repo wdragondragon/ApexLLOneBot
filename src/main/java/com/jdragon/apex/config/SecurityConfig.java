@@ -72,6 +72,7 @@ public class SecurityConfig {
                 AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/cqhttp/**"),
                 AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/ag/machineBindKeys"),
                 AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/ag/validate"),
+                AntPathRequestMatcher.antMatcher( "/test/**"),
                 AntPathRequestMatcher.antMatcher("/ban/today"),
 
                 AntPathRequestMatcher.antMatcher("/swagger-ui.html"),

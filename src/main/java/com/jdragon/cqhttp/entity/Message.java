@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Data
 @NoArgsConstructor
@@ -22,4 +23,6 @@ public class Message {
         this.data = message.getData();
         this.type = message.getType();
     }
+
+
 }

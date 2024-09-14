@@ -118,7 +118,8 @@ public class CMessageListener {
                     8、今天封禁统计
                     9、关注活跃[uid]
                     10、关注活跃[图片]
-                                        
+                    11、@我[dc举报][图片(可多张)]
+
                     tips：
                     时间类型：天|月|周|年|永久
                     申请类型：ai|apex_recoils|apex_recoils_server|auto_upgrade_script

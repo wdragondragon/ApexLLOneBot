@@ -1,8 +1,11 @@
 package com.jdragon.cqhttp.entity.msg;
 
+import cn.hutool.http.HttpUtil;
 import com.jdragon.cqhttp.entity.Message;
 import lombok.NoArgsConstructor;
 
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 @NoArgsConstructor
@@ -25,5 +28,13 @@ public class ImageMessage extends Message {
 
     public void setFile(String file) {
         getData().put("file", file);
+    }
+
+    public String getUrl() {
+        return URLDecoder.decode((String) getData().get("url"), StandardCharsets.UTF_8);
+    }
+
+    public byte[] getImageBytes() {
+        return HttpUtil.downloadBytes(getUrl());
     }
 }

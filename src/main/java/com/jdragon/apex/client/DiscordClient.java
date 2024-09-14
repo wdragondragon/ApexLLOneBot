@@ -18,13 +18,13 @@ public interface DiscordClient {
 
     @PostMapping("/channels/{channelId}/messages")
     DiscordMessage sendDiscordMessage(@PathVariable("channelId") String channelId,
-                                      @RequestParam("limit") Integer limit,
+                                      @RequestBody DiscordMessage message,
                                       @RequestHeader("authorization") String authorization);
 
 
     @PostMapping("/channels/{channelId}/attachments")
     DiscordMessage sendDiscordAttachments(@PathVariable("channelId") String channelId,
-                                          @RequestBody UploadAttachments uploadAttachments,
+                                          @RequestBody UploadAttachments message,
                                           @RequestHeader("authorization") String authorization);
 
 }

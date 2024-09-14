@@ -54,7 +54,7 @@ public class DiscordMessage {
     private String webhook_id;
 
     // send
-    private String nonce = String.valueOf(new BigInteger(62, new SecureRandom()).toString());
+    private String nonce;
 
     private List<String> sticker_ids = new ArrayList<>();
 
@@ -121,6 +121,8 @@ public class DiscordMessage {
 
         private boolean is_clip;
 
+
+        private String uploaded_filename;
 
         // upload result
         private String upload_filename;

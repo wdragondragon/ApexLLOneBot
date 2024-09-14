@@ -87,6 +87,12 @@ public class TestController {
         return discordService.getDiscordMessages(channelId, limit);
     }
 
+    @Operation(summary = "testUploadImage")
+    @GetMapping("/testUploadImage")
+    public DiscordMessage discordMsg() {
+        return discordService.testUploadImage();
+    }
+
     @Operation(summary = "testAt")
     @GetMapping("/testAt")
     public String testAt() {

@@ -23,11 +23,16 @@ public class ApexUserInfoHandler {
     }
 
     public ApexStatusUserInfo getUserInfo(String param) {
-        ApexStatusUserInfo apexStatusUserInfo = getUserInfo("PC", "uid", param);
-        if (apexStatusUserInfo == null) {
-            return getUserInfo("PC", "name", param);
+        try {
+            ApexStatusUserInfo apexStatusUserInfo = getUserInfo("PC", "uid", param);
+            if (apexStatusUserInfo == null) {
+                return getUserInfo("PC", "name", param);
+            }
+            return apexStatusUserInfo;
+        } catch (Exception e) {
+            return null;
         }
-        return apexStatusUserInfo;
+
     }
 
     public ApexStatusUserInfo getUserInfo(String platform, String type, String param) {
@@ -53,7 +58,7 @@ public class ApexUserInfoHandler {
         apexStatusUserInfo.setLevel(global.getLevel() + global.getLevelPrestige() * 500);
         apexStatusUserInfo.setPlatform(platform);
         apexStatusUserInfo.setRp(rank.getRankScore());
-        apexStatusUserInfo.setOnline(realtime.getIsOnline()==1);
+        apexStatusUserInfo.setOnline(realtime.getIsOnline() == 1);
         return apexStatusUserInfo;
     }
 

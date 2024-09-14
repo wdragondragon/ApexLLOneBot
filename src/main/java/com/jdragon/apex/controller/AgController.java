@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,7 +73,9 @@ public class AgController {
         map.put("machine_code", machineCode);
         map.put("validate_type", validateType);
         map.put("access_granted", agMachinesKeys != null);
-        map.put("expiration_time", agMachinesKeys == null ? null : agMachinesKeys.getExpirationTime());
+        map.put("expiration_time", agMachinesKeys == null ? null :
+                agMachinesKeys.getExpirationTime() == null ? null :
+                        agMachinesKeys.getExpirationTime().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         return map;
     }
 }

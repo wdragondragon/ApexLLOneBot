@@ -12,7 +12,7 @@ public class AtMessage extends Message {
     }
 
     public long getQq() {
-        return (long) getData().get("qq");
+        return Long.parseLong((String) getData().get("qq"));
     }
 
     public void setQq(long qq) {
