@@ -5,6 +5,7 @@ import cn.hutool.core.img.ImgUtil;
 import com.jdragon.apex.entity.ApexStatusUserInfo;
 import com.jdragon.apex.handle.ApexUserInfoHandler;
 import com.jdragon.apex.service.DiscordService;
+import com.jdragon.apex.utils.ImageUtil;
 import com.jdragon.cqhttp.CqListener;
 import com.jdragon.cqhttp.constants.MessageType;
 import com.jdragon.cqhttp.entity.Message;
@@ -51,8 +52,9 @@ public class DcReportMessageListener {
                         BufferedImage image = ImgUtil.toImage(imageBytes);
                         int width = image.getWidth();
                         int height = image.getHeight();
-                        if (width != 1920 || height != 1080) {
-                            message.reply("只支持1920*1080的图片");
+//                        if (width != 1920 || height != 1080) {
+                        if (!ImageUtil.isAspectRatio16x9(width, height)) {
+                            message.reply("只支持16:9的图片");
                             return;
                         }
                         int x1 = 1551;  // 起始x坐标
@@ -60,7 +62,7 @@ public class DcReportMessageListener {
                         int x2 = 1859; // 结束x坐标
                         int y2 = 1008; // 结束y坐标
                         Rectangle rectangle = new Rectangle(x1, y1, x2 - x1, y2 - y1);
-                        Image croppedImage = ImgUtil.cut(image, rectangle);
+                        Image croppedImage = ImgUtil.cut(ImgUtil.scale(image, 1920, 1080), rectangle);
                         byte[] curBytes = ImgUtil.toBytes(croppedImage, "png");
                         String orcToString = OCRExample.orcToString(curBytes).trim();
                         ApexStatusUserInfo userInfo = apexUserInfoHandler.getUserInfo(orcToString);

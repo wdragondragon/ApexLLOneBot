@@ -59,6 +59,10 @@ public class ApexUserInfoHandler {
         apexStatusUserInfo.setPlatform(platform);
         apexStatusUserInfo.setRp(rank.getRankScore());
         apexStatusUserInfo.setOnline(realtime.getIsOnline() == 1);
+        apexStatusUserInfo.setAlStopInt(rank.getALStopInt());
+        apexStatusUserInfo.setAlStopIntGlobal(rank.getALStopIntGlobal());
+        apexStatusUserInfo.setAlStopPercent(rank.getALStopPercent());
+        apexStatusUserInfo.setAlStopPercentGlobal(rank.getALStopPercentGlobal());
         return apexStatusUserInfo;
     }
 

@@ -28,10 +28,21 @@ public class ApexStatusUserInfo extends Model<ApexStatusUserInfo> {
 
     private Integer rp;
 
+    private Double alStopPercent;
+
+    private Integer alStopInt;
+
+    private Double alStopPercentGlobal;
+
+    private Integer alStopIntGlobal;
+
     private Boolean online;
 
     @Override
     public String toString() {
-        return String.format("平台：%s\nUID：%s\n名字：%s\n等级：%s\n排位分：%s\n当前%s在线", getPlatform(), getUid(), getName(), getLevel(), getRp(), getOnline() ? "" : "不");
+        return String.format("平台：%s\nUID：%s\n名字：%s\n等级：%s\n排位分：%s\nPC排名：[%s]|[%s%%]\n全平台排名：[%s]|[%s%%]\n当前%s在线", getPlatform(), getUid(), getName(), getLevel(), getRp()
+                , getAlStopInt(), getAlStopPercent()
+                , getAlStopIntGlobal(), getAlStopPercentGlobal()
+                , getOnline() ? "" : "不");
     }
 }

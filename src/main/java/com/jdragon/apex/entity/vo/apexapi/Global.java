@@ -1,5 +1,6 @@
 package com.jdragon.apex.entity.vo.apexapi;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 @Data
@@ -31,10 +32,20 @@ public class Global {
         private int ladderPosPlatform;
         private String rankImg;
         private String rankedSeason;
-        private double ALStopPercent;
-        private int ALStopInt;
-        private double ALStopPercentGlobal;
-        private int ALStopIntGlobal;
+
+        @JsonProperty("ALStopPercent")
+        private Double ALStopPercent;
+
+        @JsonProperty("ALStopInt")
+        private Integer ALStopInt;
+
+        @JsonProperty("ALStopPercentGlobal")
+        private Double ALStopPercentGlobal;
+
+        @JsonProperty("ALStopIntGlobal")
+        private Integer ALStopIntGlobal;
+
+        @JsonProperty("ALSFlag")
         private boolean ALSFlag;
     }
 

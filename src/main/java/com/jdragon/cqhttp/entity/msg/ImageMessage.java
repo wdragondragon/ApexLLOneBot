@@ -31,7 +31,7 @@ public class ImageMessage extends Message {
     }
 
     public String getUrl() {
-        return URLDecoder.decode((String) getData().get("url"), StandardCharsets.UTF_8);
+        return URLDecoder.decode((String) getData().getOrDefault("url", ""), StandardCharsets.UTF_8);
     }
 
     public byte[] getImageBytes() {
