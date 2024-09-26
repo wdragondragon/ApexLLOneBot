@@ -53,7 +53,13 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
-                .requestMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
+                .requestMatchers(
+                        "/resources/**",
+                        "/static/**",
+                        "/css/**",
+                        "/js/**",
+                        "/images/**"
+                );
     }
 
     /**
@@ -72,7 +78,8 @@ public class SecurityConfig {
                 AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/cqhttp/**"),
                 AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/ag/machineBindKeys"),
                 AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/ag/validate"),
-                AntPathRequestMatcher.antMatcher( "/test/**"),
+                AntPathRequestMatcher.antMatcher("/apex-status/**"),
+                AntPathRequestMatcher.antMatcher("/test/**"),
                 AntPathRequestMatcher.antMatcher("/ban/today"),
 
                 AntPathRequestMatcher.antMatcher("/swagger-ui.html"),
