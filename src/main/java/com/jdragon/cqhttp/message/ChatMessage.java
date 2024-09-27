@@ -41,8 +41,8 @@ public class ChatMessage extends BaseMessage {
     private MessageChain messageChain;
 
     public static ChatMessage fromJson(String json) throws IOException {
-        ChatMessage chatMessage = ObjectMapperHolder.MAPPER.readValue(json, ChatMessage.class);
-        chatMessage.validateAttributes(ObjectMapperHolder.MAPPER.convertValue(chatMessage, new TypeReference<>() {
+        ChatMessage chatMessage = ObjectMapperHolder.SNAKE_CASE_MAPPER.readValue(json, ChatMessage.class);
+        chatMessage.validateAttributes(ObjectMapperHolder.SNAKE_CASE_MAPPER.convertValue(chatMessage, new TypeReference<>() {
         }));
         chatMessage.setMessageChain(new MessageChain(chatMessage.getMessage()));
         return chatMessage;

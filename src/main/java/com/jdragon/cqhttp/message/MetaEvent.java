@@ -21,8 +21,8 @@ public class MetaEvent extends BaseMessage {
     private long time;
 
     public static MetaEvent fromJson(String json) throws IOException {
-        MetaEvent metaEvent = ObjectMapperHolder.MAPPER.readValue(json, MetaEvent.class);
-        metaEvent.validateAttributes(ObjectMapperHolder.MAPPER.convertValue(metaEvent, new TypeReference<Map<String, Object>>() {
+        MetaEvent metaEvent = ObjectMapperHolder.SNAKE_CASE_MAPPER.readValue(json, MetaEvent.class);
+        metaEvent.validateAttributes(ObjectMapperHolder.SNAKE_CASE_MAPPER.convertValue(metaEvent, new TypeReference<Map<String, Object>>() {
         }));
         return metaEvent;
     }

@@ -37,7 +37,7 @@ public class MessageHandler implements ApplicationContextAware {
     }
 
     public void handle(String json) throws IOException {
-        Map<String, Object> map = ObjectMapperHolder.MAPPER.readValue(json, new TypeReference<>() {
+        Map<String, Object> map = ObjectMapperHolder.SNAKE_CASE_MAPPER.readValue(json, new TypeReference<>() {
         });
         String postType = (String) map.get("post_type");
 

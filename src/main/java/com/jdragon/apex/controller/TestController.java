@@ -4,7 +4,9 @@ package com.jdragon.apex.controller;
 import com.jdragon.apex.client.ApexApiClient;
 import com.jdragon.apex.entity.ApexStatusUserInfo;
 import com.jdragon.apex.entity.vo.DiscordMessage;
+import com.jdragon.apex.entity.vo.RankData;
 import com.jdragon.apex.entity.vo.apexapi.ApexUser;
+import com.jdragon.apex.handle.ApexRankHistory;
 import com.jdragon.apex.handle.ApexUserInfoHandler;
 import com.jdragon.apex.service.DiscordService;
 import com.jdragon.apex.service.OpenAiService;
@@ -39,12 +41,15 @@ public class TestController {
 
     private final ApexApiClient apexApiClient;
 
-    public TestController(MessageService messageService, OpenAiService openAiService, DiscordService discordService, ApexUserInfoHandler apexUserInfoHandler, ApexApiClient apexApiClient) {
+    private final ApexRankHistory apexRankHistory;
+
+    public TestController(MessageService messageService, OpenAiService openAiService, DiscordService discordService, ApexUserInfoHandler apexUserInfoHandler, ApexApiClient apexApiClient, ApexRankHistory apexRankHistory) {
         this.messageService = messageService;
         this.openAiService = openAiService;
         this.discordService = discordService;
         this.apexUserInfoHandler = apexUserInfoHandler;
         this.apexApiClient = apexApiClient;
+        this.apexRankHistory = apexRankHistory;
     }
 
     @Operation(summary = "测试发送信息")
@@ -114,4 +119,11 @@ public class TestController {
         return apexApiClient.getByName(platform, player);
     }
 
+
+    @Operation(summary = "apexRankHistory")
+    @GetMapping("/apexRankHistory")
+    public List<RankData> apexRankHistory(@RequestParam String season,
+                                          @RequestParam String uid) {
+        return apexRankHistory.getRankHistory(season, uid);
+    }
 }

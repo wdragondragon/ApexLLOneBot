@@ -5,16 +5,12 @@ import com.jdragon.cqhttp.client.CqHttpClient;
 import com.jdragon.cqhttp.config.ObjectMapperHolder;
 import com.jdragon.cqhttp.entity.*;
 import com.jdragon.cqhttp.entity.msg.AtMessage;
-import com.jdragon.cqhttp.entity.msg.ImageMessage;
-import com.jdragon.cqhttp.entity.msg.ReplyMessage;
 import com.jdragon.cqhttp.entity.msg.TextMessage;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -82,7 +78,7 @@ public class MessageService {
                 }
                 """;
         String json = String.format(jsonTemplate, groupId);
-        Map<String, Object> request = ObjectMapperHolder.MAPPER.readValue(json, new TypeReference<>() {
+        Map<String, Object> request = ObjectMapperHolder.SNAKE_CASE_MAPPER.readValue(json, new TypeReference<>() {
         });
         return messageClient.getGroupMemberList(request);
     }

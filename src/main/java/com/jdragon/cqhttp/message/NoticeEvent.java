@@ -23,8 +23,8 @@ public class NoticeEvent extends BaseMessage {
     private String cardOld;
 
     public static NoticeEvent fromJson(String json) throws IOException {
-        NoticeEvent noticeEvent = ObjectMapperHolder.MAPPER.readValue(json, NoticeEvent.class);
-        noticeEvent.validateAttributes(ObjectMapperHolder.MAPPER.convertValue(noticeEvent, new TypeReference<Map<String, Object>>() {
+        NoticeEvent noticeEvent = ObjectMapperHolder.SNAKE_CASE_MAPPER.readValue(json, NoticeEvent.class);
+        noticeEvent.validateAttributes(ObjectMapperHolder.SNAKE_CASE_MAPPER.convertValue(noticeEvent, new TypeReference<Map<String, Object>>() {
         }));
         return noticeEvent;
     }

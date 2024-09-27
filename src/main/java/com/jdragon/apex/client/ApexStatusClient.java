@@ -22,7 +22,11 @@ public interface ApexStatusClient {
 
     @GetMapping("/core/interface")
     String coreInterfaceByName(@RequestParam("token") String token,
-                         @RequestParam("platform") String platform,
-                         @RequestParam("player") String player,
-                         @RequestHeader("Cookie") String cookie);
+                               @RequestParam("platform") String platform,
+                               @RequestParam("player") String player,
+                               @RequestHeader("Cookie") String cookie);
+
+    @GetMapping("/core/gameHistory")
+    String gameHistory(@RequestParam("split") String split,
+                       @RequestParam("uid") String uid);
 }
