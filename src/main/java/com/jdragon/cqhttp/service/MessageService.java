@@ -78,8 +78,13 @@ public class MessageService {
                 }
                 """;
         String json = String.format(jsonTemplate, groupId);
-        Map<String, Object> request = ObjectMapperHolder.SNAKE_CASE_MAPPER.readValue(json, new TypeReference<>() {
-        });
-        return messageClient.getGroupMemberList(request);
+        try {
+            Map<String, Object> request = ObjectMapperHolder.SNAKE_CASE_MAPPER.readValue(json, new TypeReference<>() {
+            });
+            return messageClient.getGroupMemberList(request);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return null;
+        }
     }
 }

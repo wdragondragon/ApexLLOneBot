@@ -116,11 +116,15 @@ public class AgMachineKeysService {
             List<String> userIdList = new ArrayList<>();
             if (StringUtils.isNotBlank(agMachinesKeys.getCreateGroup())) {
                 CqResult<List<GroupMember>> groupMemberList = messageService.getGroupMemberList(Long.valueOf(agMachinesKeys.getCreateGroup()));
-                userIdList = groupMemberList.getData().stream()
-                        .map(GroupMember::getUser_id)
-                        .map(String::valueOf).toList();
+                if (groupMemberList == null) {
+                    userIdList = new ArrayList<>();
+                } else {
+                    userIdList = groupMemberList.getData().stream()
+                            .map(GroupMember::getUser_id)
+                            .map(String::valueOf).toList();
+                }
             }
-            if (agMachinesKeys.getExternalCard() == 1 || userIdList.contains(agMachinesKeys.getQq())) {
+            if (agMachinesKeys.getExternalCard() == 1 || userIdList.contains(agMachinesKeys.getQq()) || userIdList.isEmpty()) {
                 if (agMachinesKeys.getLastValTime() == null ||
                         LocalDateTime.now().isAfter(agMachinesKeys.getLastValTime().plusSeconds(45))) {
                     agMachinesKeys.setLastValTime(LocalDateTime.now());
