@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 import java.util.Map;
 
-@FeignClient(name = "messageClient", url = "http://localhost:3000")
+@FeignClient(name = "messageClient", url = "${cq.url:http://localhost:3000}")
 public interface CqHttpClient {
 
     @PostMapping("/send_private_msg")

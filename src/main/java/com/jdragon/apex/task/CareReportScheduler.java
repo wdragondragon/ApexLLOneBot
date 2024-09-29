@@ -3,6 +3,7 @@ package com.jdragon.apex.task;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
+import com.jdragon.apex.config.SystemConstants;
 import com.jdragon.apex.entity.DcReport;
 import com.jdragon.apex.entity.vo.DiscordMessage;
 import com.jdragon.apex.service.DcReportService;
@@ -16,8 +17,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.io.InputStream;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,13 +24,16 @@ import java.util.List;
 @Component
 public class CareReportScheduler {
 
+    private final SystemConstants systemConstants;
+
     private final DiscordService discordService;
 
     private final MessageService messageService;
 
     private final DcReportService dcReportService;
 
-    public CareReportScheduler(DiscordService discordService, MessageService messageService, DcReportService dcReportService) {
+    public CareReportScheduler(SystemConstants systemConstants, DiscordService discordService, MessageService messageService, DcReportService dcReportService) {
+        this.systemConstants = systemConstants;
         this.discordService = discordService;
         this.messageService = messageService;
         this.dcReportService = dcReportService;
@@ -39,6 +41,9 @@ public class CareReportScheduler {
 
     @Scheduled(fixedRate = 300000)
     public void performTask() {
+        if (!systemConstants.isScheduler()) {
+            return;
+        }
         List<DiscordMessage> messages = discordService.getDiscordMessages("1229490771426541580", 10);
 
         for (DiscordMessage message : messages) {
