@@ -20,5 +20,9 @@ public class FrontController {
         return "input";
     }
 
+    @GetMapping("history")
+    public String history() {
+        return "history";
+    }
 
 }
