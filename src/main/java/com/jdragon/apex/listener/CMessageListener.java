@@ -140,7 +140,7 @@ public class CMessageListener {
             Integer createNumber = Integer.valueOf(matcher.group(1));
             String keyType = matcher.group(2);
             String validateType = matcher.group(3);
-            List<String> keyList = agKeysService.createKeysExt(createNumber, validateType, keyType);
+            List<String> keyList = agKeysService.createKeysExt(createNumber, validateType, keyType, message.getSelfId());
             String keyStr = Strings.join(keyList, '\n');
             message.reply(String.format("生成%d张%s%s卡成功，已私聊，请查收后妥善保管。", createNumber, validateType, keyType));
             message.replyPrivate(String.format("生成%d张%s%s卡成功，卡密：\n%s", createNumber, validateType, keyType, keyStr));

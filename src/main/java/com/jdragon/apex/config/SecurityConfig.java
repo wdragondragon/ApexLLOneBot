@@ -78,6 +78,7 @@ public class SecurityConfig {
                 AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/cqhttp/**"),
                 AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/ag/machineBindKeys"),
                 AntPathRequestMatcher.antMatcher(HttpMethod.GET, "/ag/validate"),
+                AntPathRequestMatcher.antMatcher("/front/**"),
                 AntPathRequestMatcher.antMatcher("/apex-status/**"),
                 AntPathRequestMatcher.antMatcher("/test/**"),
                 AntPathRequestMatcher.antMatcher("/ban/today"),

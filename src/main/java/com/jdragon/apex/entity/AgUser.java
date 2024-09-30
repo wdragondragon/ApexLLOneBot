@@ -19,7 +19,7 @@ import java.util.List;
 public class AgUser extends Model<AgUser> implements UserDetails {
 
     @TableId(type = IdType.AUTO)
-    private Integer id;
+    private Long id;
 
     private String username;
 

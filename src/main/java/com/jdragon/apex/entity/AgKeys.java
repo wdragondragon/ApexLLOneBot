@@ -38,6 +38,8 @@ public class AgKeys extends Model<AgKeys> {
 
     private String createGroup;
 
+    private long creatorId;
+
     @Override
     public Serializable pkVal() {
         return id;

@@ -2,10 +2,13 @@ package com.jdragon.apex.controller;
 
 
 import com.jdragon.apex.entity.AgMachinesKeys;
+import com.jdragon.apex.entity.AgUser;
 import com.jdragon.apex.service.AgKeysService;
 import com.jdragon.apex.service.AgMachineKeysService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,7 +47,9 @@ public class AgController {
     public String createKeyExt(@RequestParam Integer createNumber,
                                @RequestParam String keyType,
                                @RequestParam String validateType) {
-        return Strings.join(agKeysService.createKeysExt(createNumber, keyType, validateType), '\n');
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        AgUser agUser = (AgUser) authentication.getPrincipal();
+        return Strings.join(agKeysService.createKeysExt(createNumber, keyType, validateType, agUser.getId()), '\n');
     }
 
 

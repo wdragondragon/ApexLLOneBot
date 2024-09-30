@@ -31,7 +31,7 @@ public class AgKeysService extends ServiceImpl<AgKeysMapper, AgKeys> {
             "永久", 5);
 
 
-    public List<String> createKeysExt(Integer createNumber, String validateTypeStr, String keyTypeStr) {
+    public List<String> createKeysExt(Integer createNumber, String validateTypeStr, String keyTypeStr, long creator) {
         List<String> keyList = new LinkedList<>();
         for (int i = 0; i < createNumber; i++) {
             String uuid = UUID.randomUUID().toString();
@@ -41,6 +41,7 @@ public class AgKeysService extends ServiceImpl<AgKeysMapper, AgKeys> {
                     .used(0)
                     .keyType(KEY_TYPE_MAP.getOrDefault(keyTypeStr, 1))
                     .externalCard(1)
+                    .creatorId(creator)
                     .build();
             agKeys.insert();
             keyList.add(uuid);
